@@ -1,0 +1,40 @@
+package com.gutfriendly.app.admin.repository;
+
+import java.time.LocalDateTime;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.gutfriendly.app.admin.enums.InspectionStatus;
+import com.gutfriendly.app.inspector.model.InspectionDetails;
+
+public interface InspectionDetailsRepository extends JpaRepository<InspectionDetails, Integer> {
+	
+	@Query("SELECT COUNT(i) FROM InspectionDetails i WHERE i.status = 'ASSIGNED'")
+	long countScheduledInspections();
+	
+	Page<InspectionDetails> findAllByOrderByInspectionDateDesc(Pageable pageable);
+	
+	
+	Page<InspectionDetails> findByStatusAndInspectionDateAfterOrderByInspectionDateAsc(
+	        InspectionStatus status,
+	        LocalDateTime inspectionDate,
+	        Pageable pageable);
+	
+	
+	  Page<InspectionDetails> findByStatus(
+	            InspectionStatus status,
+	            Pageable pageable);
+
+	    Page<InspectionDetails> findByShop_ShopId(
+	            int shopId,
+	            Pageable pageable);
+
+	    Page<InspectionDetails> findByInspector_InspectorId(
+	            int inspectorId,
+	            Pageable pageable);
+	
+
+}

@@ -39,14 +39,10 @@ public class VendorController {
 
 		VendorDetails vendor = service.login(loginDTO.getPhoneNo(), loginDTO.getPassword());
 		if (vendor == null) {
-			return ResponseEntity
-					.status(HttpStatus.UNAUTHORIZED)
-					.body(Map.of("message", "Invalid Credentials"));
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid Credentials"));
 		}
 
-		return ResponseEntity.ok(Map.of(
-				"message", "Login Successful",
-				"vendor", vendor));
+		return ResponseEntity.ok(Map.of("message", "Login Successful", "vendor", vendor));
 
 	}
 
