@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.gutfriendly.app.admin.dto.response.InspectionResponse;
+import com.gutfriendly.app.admin.dto.response.InspectorSummaryResponse;
 import com.gutfriendly.app.admin.dto.response.ShopResponse;
 import com.gutfriendly.app.admin.enums.InspectionStatus;
 import com.gutfriendly.app.admin.enums.InspectorRecommendation;
@@ -135,6 +136,19 @@ public class InspectionServiceImpl implements InspectionService {
 	}
 
 	@Override
+	public List<InspectorSummaryResponse> getAllInspectors() {
+		return inspectorRepo.findAll().stream()
+				.map(inspector -> new InspectorSummaryResponse(
+						inspector.getInspectorId(),
+						inspector.getFirstName(),
+						inspector.getLastName(),
+						inspector.getEmail(),
+						inspector.getPhoneNo(),
+						inspector.getStatus().name()))
+				.toList();
+	}
+
+	@Override
 	public InspectionResponse assignInspector(int inspectionId, int inspectorId) {
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
@@ -231,6 +245,7 @@ public class InspectionServiceImpl implements InspectionService {
 		shop.setStatus(ShopStatus.VERIFIED);
 		shop.setBlocked(false);
 		shop.setServiceAvailabilityStatus(ServiceAvailabilityStatus.SERVICEABLE);
+		shop.setIsOpen(true);
 
 		Double inspectionScore = inspection.getOverallInspectionScore();
 		if (inspectionScore != null) {

@@ -1,8 +1,11 @@
 package com.gutfriendly.app.admin.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.gutfriendly.app.admin.dto.response.InspectionResponse;
+import com.gutfriendly.app.admin.dto.response.InspectorSummaryResponse;
 import com.gutfriendly.app.admin.enums.InspectionStatus;
 
 public interface InspectionService {
@@ -41,6 +44,9 @@ public interface InspectionService {
             String sortBy,
             String direction);
     
+    // List inspectors for admin assignment
+    List<InspectorSummaryResponse> getAllInspectors();
+
     // Assign / Change Inspector
     public InspectionResponse assignInspector(
             int inspectionId,

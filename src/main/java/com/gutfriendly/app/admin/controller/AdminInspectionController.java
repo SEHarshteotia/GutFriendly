@@ -1,6 +1,8 @@
 package com.gutfriendly.app.admin.controller;
 
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gutfriendly.app.admin.dto.request.InspectionRejectionRequest;
 import com.gutfriendly.app.admin.dto.request.ReInspectionRequest;
 import com.gutfriendly.app.admin.dto.response.InspectionResponse;
+import com.gutfriendly.app.admin.dto.response.InspectorSummaryResponse;
 import com.gutfriendly.app.admin.enums.InspectionStatus;
 import com.gutfriendly.app.admin.service.InspectionService;
 
@@ -80,6 +83,11 @@ public class AdminInspectionController {
 		
 		return service.getInspectionsByInspector(inspectorId,page, size, sortBy, direction);
 		}
+
+	@GetMapping("/inspectors")
+	public List<InspectorSummaryResponse> getAllInspectors() {
+		return service.getAllInspectors();
+	}
 
 	@PatchMapping("/{inspectionId}/assign/{inspectorId}")
 	public InspectionResponse assignInspector(
