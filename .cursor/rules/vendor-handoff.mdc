@@ -1,0 +1,41 @@
+---
+description: Keep VENDOR_FRONTEND_HANDOFF.md in sync with vendor API changes
+globs: src/main/java/com/gutfriendly/app/vendor/**,docs/VENDOR_FRONTEND_HANDOFF.md
+alwaysApply: false
+---
+
+# Vendor frontend handoff — keep in sync
+
+When you change anything that affects the vendor portal API or frontend contract, **update `docs/VENDOR_FRONTEND_HANDOFF.md` in the same task** before finishing. Do not leave handoff updates for a follow-up.
+
+## Triggers (update the handoff when you change…)
+
+- Controllers, endpoints, HTTP methods, or URL paths
+- Request/response DTOs, field names, or wrapper shapes
+- Enums (`VendorStatus`, `StoreOrderStatus`, `PayoutStatus`, etc.)
+- Auth/register/login behavior
+- Naming (`Vendor*` vs `Store*`), `shopId` vs `store_id`
+- Database table/entity names exposed to the frontend
+- CORS, base URL, or known limitations
+
+## What to update in the handoff
+
+1. **API reference** (§7) — endpoint tables, request/response types
+2. **DTO shapes** (§8) — TypeScript-friendly interfaces
+3. **Enums** (§9), **dashboard wiring** (§10), **example API service** (§15)
+4. **Controllers** (§16) and **database tables** (§17) when structure changes
+5. **Naming conventions** (§2) or **limitations** (§13) when relevant
+
+## Conventions to preserve in the doc
+
+- Shop-scoped types: `Store*`; account-level: `Vendor*`
+- Paths: `/vendor/{vendorId}/shops/{shopId}/...` for shop APIs
+- List endpoints use wrappers (`orders`, `items`, `shops`, etc.) — not bare arrays
+- Note embedded vs sub-endpoint dashboard fields when they differ
+
+## Completion checklist
+
+- [ ] Handoff reflects every new/changed/removed endpoint
+- [ ] DTO examples match actual JSON field names
+- [ ] Example `vendorApi` helpers added or updated if endpoints changed
+- [ ] No stale `VendorAddress`, `VendorStore`, or other renamed types remain in the doc

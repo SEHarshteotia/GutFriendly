@@ -17,6 +17,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 
+import com.gutfriendly.app.orders.model.UserOrders;
+import com.gutfriendly.app.user.model.UserDetails;
+
 enum PaymentMode {
     CASH,
     UPI,

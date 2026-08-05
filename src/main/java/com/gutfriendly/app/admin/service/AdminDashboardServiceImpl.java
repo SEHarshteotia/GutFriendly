@@ -21,11 +21,11 @@ import com.gutfriendly.app.admin.enums.InspectionStatus;
 import com.gutfriendly.app.admin.model.Certificate;
 import com.gutfriendly.app.inspector.model.InspectionDetails;
 import com.gutfriendly.app.admin.model.ShopDetails;
-import com.gutfriendly.app.admin.model.UserReviews;
+import com.gutfriendly.app.reviews.model.UserReviews;
 import com.gutfriendly.app.admin.repository.CertificateRepository;
 import com.gutfriendly.app.admin.repository.InspectionDetailsRepository;
 import com.gutfriendly.app.admin.repository.ShopDetailsRepository;
-import com.gutfriendly.app.admin.repository.UserReviewsRepository;
+import com.gutfriendly.app.reviews.repository.UserReviewsRepository;
 import com.gutfriendly.app.admin.repository.VendorDetailsRepository;
 
 @Service
@@ -55,10 +55,6 @@ public class AdminDashboardServiceImpl implements AdminDashBoardService {
 	public DashboardSummaryDto getDashboardSummary() {
 
 		DashboardSummaryDto summary = new DashboardSummaryDto();
-//		Double avgGutTrustScore =  vendor.getAverageGutTrustScore();
-//		
-//		// 3. Final GutTrust Score 
-//		summary.setAverageGutTrustScore(avgGutTrustScore == null ?0.0:avgGutTrustScore);
 
 		// 4. Total Verified Vendors
 		summary.setTotalVerfiedVendors(vendorDetailsRepo.countByIsActive(true));
@@ -119,8 +115,8 @@ public class AdminDashboardServiceImpl implements AdminDashBoardService {
 					"Inspection Completed For" + inspection.getShop().getShopName(), inspection.getInspectionDate()));
 		}
 		for (UserReviews review : reviews) {
-			activities.add(new RecentActivityResponse("REVIEW", review.getUser().getF_name() + " "
-					+ review.getUser().getL_name() + "Reviewd" + review.getShop().getShopName(),
+			activities.add(new RecentActivityResponse("REVIEW", review.getUser().getFname() + " "
+					+ review.getUser().getLname() + "Reviewd" + review.getShop().getShopName(),
 					review.getCreatedAt()));
 		}
 		for (Certificate certificate : certificates) {
@@ -149,7 +145,7 @@ public class AdminDashboardServiceImpl implements AdminDashBoardService {
 		Pageable pageable = PageRequest.of(0, 5);
 
 		List<InspectionDetails> inspections = inspectionDetailsRepo
-				.findByStatusAndInspectionDateAfterOrderByInspectionDateAsc(InspectionStatus.ASSIGNED,
+				.findByStatusAndInspectionDateAfterOrderByInspectionDateAsc(InspectionStatus.SCHEDULED,
 						LocalDateTime.now(), pageable)
 				.getContent();
 

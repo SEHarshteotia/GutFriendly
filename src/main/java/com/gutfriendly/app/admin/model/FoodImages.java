@@ -13,69 +13,63 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "shop_images")
+@Table(name = "food_images")
 public class FoodImages {
-	
-	public class ShopImages {
 
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private int imageId;
-	    
-	    @ManyToOne(fetch = FetchType.LAZY)
-	    @JoinColumn(name = "shop_id", nullable = false)
-	    private ShopDetails shop;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int imageId;
 
-	    @Column(name = "image_url", nullable = false, length = 500)
-	    private String imageUrl;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "food_id", nullable = false)
+	private FoodItemsDetails food;
 
-	    @Column(name = "is_primary", nullable = false)
-	    private boolean primaryImage = false;
-	    
-	    @Column(name = "uploaded_at", nullable = false)
-	    private LocalDateTime uploadedAt;
+	@Column(name = "image_url", nullable = false, length = 500)
+	private String imageUrl;
 
-	    public LocalDateTime getUploadedAt() {
-			return uploadedAt;
-		}
+	@Column(name = "is_primary", nullable = false)
+	private boolean primaryImage = false;
 
-		public void setUploadedAt(LocalDateTime uploadedAt) {
-			this.uploadedAt = uploadedAt;
-		}
+	@Column(name = "uploaded_at", nullable = false)
+	private LocalDateTime uploadedAt;
 
-		public int getImageId() {
-			return imageId;
-		}
-
-		public void setImageId(int imageId) {
-			this.imageId = imageId;
-		}
-
-		public ShopDetails getShop() {
-			return shop;
-		}
-
-		public void setShop(ShopDetails shop) {
-			this.shop = shop;
-		}
-
-		public String getImageUrl() {
-			return imageUrl;
-		}
-
-		public void setImageUrl(String imageUrl) {
-			this.imageUrl = imageUrl;
-		}
-
-		public boolean isPrimaryImage() {
-			return primaryImage;
-		}
-
-		public void setPrimaryImage(boolean primaryImage) {
-			this.primaryImage = primaryImage;
-		}
-
-		
-
+	public int getImageId() {
+		return imageId;
 	}
+
+	public void setImageId(int imageId) {
+		this.imageId = imageId;
 	}
+
+	public FoodItemsDetails getFood() {
+		return food;
+	}
+
+	public void setFood(FoodItemsDetails food) {
+		this.food = food;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public boolean isPrimaryImage() {
+		return primaryImage;
+	}
+
+	public void setPrimaryImage(boolean primaryImage) {
+		this.primaryImage = primaryImage;
+	}
+
+	public LocalDateTime getUploadedAt() {
+		return uploadedAt;
+	}
+
+	public void setUploadedAt(LocalDateTime uploadedAt) {
+		this.uploadedAt = uploadedAt;
+	}
+}

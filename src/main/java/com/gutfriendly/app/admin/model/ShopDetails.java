@@ -1,6 +1,7 @@
 package com.gutfriendly.app.admin.model;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -90,10 +91,26 @@ public class ShopDetails {
 	@Column(nullable = false)
 	private ServiceAvailabilityStatus serviceAvailabilityStatus =
 	        ServiceAvailabilityStatus.NOT_SERVICEABLE;
-	
-	
-	
-	public String getAdminRemarks() {
+
+	@Column(length = 255)
+	private String imageUrl;
+
+	private Boolean isOpen = false;
+
+	private Boolean onlineOrdersEnabled = true;
+
+	private LocalTime openTime = LocalTime.of(9, 0);
+
+	private LocalTime closeTime = LocalTime.of(22, 0);
+
+	private Integer estimatedPrepTimeMinutes = 15;
+
+	private Double rating;
+
+	private Long ratingCount = 0L;
+
+
+		public String getAdminRemarks() {
 		return adminRemarks;
 	}
 
@@ -233,6 +250,70 @@ public class ShopDetails {
 
 	public void setAddress_id(VendorShopAddress address_id) {
 		this.address_id = address_id;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public Boolean getIsOpen() {
+		return isOpen;
+	}
+
+	public void setIsOpen(Boolean isOpen) {
+		this.isOpen = isOpen;
+	}
+
+	public Boolean getOnlineOrdersEnabled() {
+		return onlineOrdersEnabled;
+	}
+
+	public void setOnlineOrdersEnabled(Boolean onlineOrdersEnabled) {
+		this.onlineOrdersEnabled = onlineOrdersEnabled;
+	}
+
+	public LocalTime getOpenTime() {
+		return openTime;
+	}
+
+	public void setOpenTime(LocalTime openTime) {
+		this.openTime = openTime;
+	}
+
+	public LocalTime getCloseTime() {
+		return closeTime;
+	}
+
+	public void setCloseTime(LocalTime closeTime) {
+		this.closeTime = closeTime;
+	}
+
+	public Integer getEstimatedPrepTimeMinutes() {
+		return estimatedPrepTimeMinutes;
+	}
+
+	public void setEstimatedPrepTimeMinutes(Integer estimatedPrepTimeMinutes) {
+		this.estimatedPrepTimeMinutes = estimatedPrepTimeMinutes;
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
+	}
+
+	public Long getRatingCount() {
+		return ratingCount;
+	}
+
+	public void setRatingCount(Long ratingCount) {
+		this.ratingCount = ratingCount;
 	}
 
 	

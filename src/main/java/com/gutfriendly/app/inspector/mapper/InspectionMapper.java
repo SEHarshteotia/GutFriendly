@@ -52,12 +52,6 @@ public class InspectionMapper {
 		                   inspection.getReviewedAt());
 
 		           return dto;
-		       
-
-		   
-	       
-
-
+	}
 }
-		   }
 

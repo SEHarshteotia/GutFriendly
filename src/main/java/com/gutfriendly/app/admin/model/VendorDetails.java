@@ -17,11 +17,17 @@ public class VendorDetails {
 	    @Column(name = "f_name", nullable = false, length = 40)
 	    private String firstName;
 
+	    @Column(name = "m_name", length = 40)
+	    private String middleName;
+
 	    @Column(name = "l_name", nullable = false, length = 40)
 	    private String lastName;
 
-	    @Column(name = "phone_no", nullable = false, length = 40)
+	    @Column(name = "phone_no", nullable = false, length = 40, unique = true)
 	    private String phoneNo;
+
+	    @Column(nullable = false)
+	    private String password;
 
 	    @Column(name = "email", length = 100,unique = true)
 	    private String email;
@@ -29,7 +35,7 @@ public class VendorDetails {
 	    @Column(name = "adhar_no", nullable = false,unique = true)
 	    private String adharNo;
 
-	    @Column(name = "pan_no", nullable = false, length = 20,unique = true)
+	    @Column(name = "pan_no", nullable = true, length = 20, unique = true)
 	    private String panNo;
 	    
 		@Column(name = "joining_date")
@@ -59,6 +65,14 @@ public class VendorDetails {
 			this.firstName = firstName;
 		}
 
+		public String getMiddleName() {
+			return middleName;
+		}
+
+		public void setMiddleName(String middleName) {
+			this.middleName = middleName;
+		}
+
 		public String getLastName() {
 			return lastName;
 		}
@@ -73,6 +87,14 @@ public class VendorDetails {
 
 		public void setPhoneNo(String phoneNo) {
 			this.phoneNo = phoneNo;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
 		}
 
 		public String getEmail() {

@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.gutfriendly.app.admin.dto.request.InspectionTestResultRequest;
 import com.gutfriendly.app.admin.dto.response.InspectionResponse;
@@ -26,7 +27,11 @@ import com.gutfriendly.app.inspector.model.TestCatalog;
 import com.gutfriendly.app.admin.repository.InspectionDetailsRepository;
 import com.gutfriendly.app.admin.repository.InspectionTestResultRepo;
 import com.gutfriendly.app.admin.repository.TestCatalogRepo;
+import com.gutfriendly.app.user.exception.BadRequestException;
+import com.gutfriendly.app.user.exception.ConflictException;
+import com.gutfriendly.app.user.exception.ResourceNotFoundException;
 
+@Service
 public class InspectorInspectionServiceImpl implements InspectorInspectionService {
 
 	private final InspectionDetailsRepository inspectionRepo;
@@ -67,7 +72,7 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found.");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		InspectionDetails inspection = optionalInspection.get();
@@ -81,12 +86,12 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection Not Found");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 		InspectionDetails inspection = optionalInspection.get();
 
 		if (inspection.getStatus() != InspectionStatus.ASSIGNED) {
-			throw new RuntimeException("Only assigned inspections can be started.");
+			throw new ConflictException("Only assigned inspections can be started.");
 		}
 
 		inspection.setStatus(InspectionStatus.IN_PROGRESS);
@@ -101,7 +106,7 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found.");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		// Step 2 : Get Test Results
@@ -124,7 +129,7 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found.");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		// Step 2 : Get Inspection
@@ -132,20 +137,19 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 
 		// Step 3 : Validation
 		if (inspection.getStatus() != InspectionStatus.IN_PROGRESS) {
-			throw new RuntimeException("Only inspections in progress can save test results.");
+			throw new ConflictException("Only inspections in progress can save test results.");
 		}
 
 		Optional<TestCatalog> optionalTest = testRepo.findById(request.getTestId());
 
 		if (optionalTest.isEmpty()) {
-			throw new RuntimeException("Test not found.");
+			throw new ResourceNotFoundException("Test not found");
 		}
 
 		TestCatalog test = optionalTest.get();
 
 		if (resultRepo.findByInspection_InspectionIdAndTest_TestId(inspectionId, request.getTestId()).isPresent()) {
-
-			throw new RuntimeException("Result for this test has already been submitted.");
+			throw new ConflictException("Result for this test has already been submitted.");
 		}
 
 		// Step 6 : Create Test Result
@@ -180,7 +184,7 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found.");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		// Step 2 : Get Inspection
@@ -188,14 +192,14 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 
 		// Step 3 : Validation
 		if (inspection.getStatus() != InspectionStatus.IN_PROGRESS) {
-			throw new RuntimeException("Only inspections in progress can be submitted.");
+			throw new ConflictException("Only inspections in progress can be submitted.");
 		}
 
 		// Step 4 : Get Test Results
 		List<InspectionTestResult> testResults = resultRepo.findByInspection_InspectionId(inspectionId);
 
 		if (testResults.isEmpty()) {
-			throw new RuntimeException("Please complete at least one test before submitting.");
+			throw new BadRequestException("Please complete at least one test before submitting.");
 		}
 
 		// Step 5 : Calculate Overall Score

@@ -38,7 +38,7 @@ public class InspectionDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private InspectionStatus status = InspectionStatus.ASSIGNED;
+    private InspectionStatus status = InspectionStatus.SCHEDULED;
 
     // Overall score calculated from all performed tests
     @Column(nullable = false)

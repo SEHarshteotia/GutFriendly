@@ -1,6 +1,8 @@
 package com.gutfriendly.app.admin.repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,8 +14,13 @@ import com.gutfriendly.app.inspector.model.InspectionDetails;
 
 public interface InspectionDetailsRepository extends JpaRepository<InspectionDetails, Integer> {
 	
-	@Query("SELECT COUNT(i) FROM InspectionDetails i WHERE i.status = 'ASSIGNED'")
+	@Query("SELECT COUNT(i) FROM InspectionDetails i WHERE i.status = 'SCHEDULED'")
 	long countScheduledInspections();
+
+	boolean existsByShop_ShopIdAndStatusIn(int shopId, Collection<InspectionStatus> statuses);
+
+	Optional<InspectionDetails> findFirstByShop_ShopIdAndStatusInOrderByInspectionDateDesc(int shopId,
+			Collection<InspectionStatus> statuses);
 	
 	Page<InspectionDetails> findAllByOrderByInspectionDateDesc(Pageable pageable);
 	

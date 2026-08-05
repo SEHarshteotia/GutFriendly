@@ -1,7 +1,5 @@
 package com.gutfriendly.app.admin.service;
 
-import java.security.PrivateKey;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +17,7 @@ import com.gutfriendly.app.admin.enums.ShopStatus;
 import com.gutfriendly.app.inspector.mapper.ShopMapper;
 import com.gutfriendly.app.admin.model.ShopDetails;
 import com.gutfriendly.app.admin.repository.ShopDetailsRepository;
+import com.gutfriendly.app.user.exception.ResourceNotFoundException;
 
 @Service
 public class ShopServiceImpl implements ShopsService {
@@ -41,9 +40,7 @@ public class ShopServiceImpl implements ShopsService {
 		List<ShopResponse> response = new ArrayList<>();
 
 		for (ShopDetails shop : shopPage.getContent()) {
-
-			response.add(ShopMapper.toDto(shop));// ShopMapper is a class having method toDto(containing boilerplate
-													// code )that is performing the repetetive code
+			response.add(ShopMapper.toDto(shop));
 		}
 
 		return new PageImpl<>(response, pageable, shopPage.getTotalElements());
@@ -60,9 +57,7 @@ public class ShopServiceImpl implements ShopsService {
 		Page<ShopDetails> shopPage = shopDetailsRepo.findByStatus(status, pageable);
 
 		for (ShopDetails shop : shopPage.getContent()) {
-
 			response.add(ShopMapper.toDto(shop));
-
 		}
 		return new PageImpl<>(response, pageable, shopPage.getTotalElements());
 	}
@@ -80,9 +75,7 @@ public class ShopServiceImpl implements ShopsService {
 		List<ShopResponse> response = new ArrayList<>();
 
 		for (ShopDetails shop : shopPage.getContent()) {
-
-			response.add(ShopMapper.toDto(shop));// ShopMapper is a class having method toDto(containing boilerplate
-													// code )that is performing the repetetive code
+			response.add(ShopMapper.toDto(shop));
 		}
 
 		return new PageImpl<>(response, pageable, shopPage.getTotalElements());
@@ -109,7 +102,7 @@ public class ShopServiceImpl implements ShopsService {
 		Optional<ShopDetails> optionalShop = shopDetailsRepo.findByShopId(shopId);
 
 		if (optionalShop.isEmpty()) {
-			throw new RuntimeException("Shop not found");
+			throw new ResourceNotFoundException("Shop not found");
 		}
 
 		return ShopMapper.toDto(optionalShop.get());
@@ -119,7 +112,7 @@ public class ShopServiceImpl implements ShopsService {
 	public ShopResponse blockShop(int shopId, String BlockShopReason) {
 		Optional<ShopDetails> shop = shopDetailsRepo.findByShopId(shopId);
 		if (shop.isEmpty()) {
-			throw new RuntimeException("Shop Not found");
+			throw new ResourceNotFoundException("Shop not found");
 		}
 		ShopDetails shopDetails = shop.get();
 		shopDetails.setServiceAvailabilityStatus(ServiceAvailabilityStatus.NOT_SERVICEABLE);
@@ -133,7 +126,7 @@ public class ShopServiceImpl implements ShopsService {
 	public ShopResponse UnblockShop(int shopId) {
 		Optional<ShopDetails> shop = shopDetailsRepo.findByShopId(shopId);
 		if (shop.isEmpty()) {
-			throw new RuntimeException("Shop Not found");
+			throw new ResourceNotFoundException("Shop not found");
 		}
 		ShopDetails shopDetails = shop.get();
 		shopDetails.setServiceAvailabilityStatus(ServiceAvailabilityStatus.SERVICEABLE);

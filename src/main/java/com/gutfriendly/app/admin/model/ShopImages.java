@@ -28,6 +28,14 @@ public class ShopImages {
 
 	    @Column(nullable = false)
 	    private boolean primaryImage = false;
+
+	    public String getImageUrl() {
+	    	return imageUrl;
+	    }
+
+	    public boolean isPrimaryImage() {
+	    	return primaryImage;
+	    }
 	}
 
 

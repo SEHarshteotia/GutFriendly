@@ -1,0 +1,17 @@
+package com.gutfriendly.app.reviews.enums;
+
+public enum ReviewKeyword {
+
+	GOOD_HYGIENE,
+	FRESH_FOOD,
+	GOOD_PACKAGING,
+	GOOD_QUALITY,
+	TASTY,
+	VALUE_FOR_MONEY,
+	ON_TIME_DELIVERY,
+	POOR_HYGIENE,
+	STALE_FOOD,
+	BAD_PACKAGING,
+	POOR_QUALITY,
+	LATE_DELIVERY
+}

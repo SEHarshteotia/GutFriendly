@@ -69,6 +69,10 @@ public class FoodItemsDetails {
 		this.updatedAt = updatedAt;
 	}
 
+	public BigDecimal getPrice() {
+		return price;
+	}
+
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}

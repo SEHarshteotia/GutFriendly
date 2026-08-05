@@ -25,6 +25,9 @@ import com.gutfriendly.app.admin.model.ShopDetails;
 import com.gutfriendly.app.admin.repository.InspectionDetailsRepository;
 import com.gutfriendly.app.admin.repository.InspectorDetailsRepo;
 import com.gutfriendly.app.admin.repository.ShopDetailsRepository;
+import com.gutfriendly.app.user.exception.ConflictException;
+import com.gutfriendly.app.user.exception.ResourceNotFoundException;
+import com.gutfriendly.app.user.service.GutTrustScoreService;
 
 @Service
 public class InspectionServiceImpl implements InspectionService {
@@ -35,11 +38,14 @@ public class InspectionServiceImpl implements InspectionService {
 
 	private final ShopDetailsRepository shopRepo;
 
+	private final GutTrustScoreService gutTrustScoreService;
+
 	InspectionServiceImpl(InspectionDetailsRepository inspectionRepo, InspectorDetailsRepo inspectorRepo,
-			ShopDetailsRepository shopRepo) {
+			ShopDetailsRepository shopRepo, GutTrustScoreService gutTrustScoreService) {
 		this.inspectionRepo = inspectionRepo;
 		this.inspectorRepo = inspectorRepo;
 		this.shopRepo = shopRepo;
+		this.gutTrustScoreService = gutTrustScoreService;
 	}
 
 	@Override
@@ -64,7 +70,7 @@ public class InspectionServiceImpl implements InspectionService {
 	public InspectionResponse getInspectionById(int inspectionId) {
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		InspectionDetails inspection = optionalInspection.get();
@@ -133,18 +139,23 @@ public class InspectionServiceImpl implements InspectionService {
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		// Find inspector
 		Optional<InspectorDetails> optionalInspector = inspectorRepo.findByInspectorId(inspectorId);
 
 		if (optionalInspector.isEmpty()) {
-			throw new RuntimeException("Inspector not found");
+			throw new ResourceNotFoundException("Inspector not found");
 		}
 
 		// Get objects
 		InspectionDetails inspection = optionalInspection.get();
+
+		if (inspection.getStatus() != InspectionStatus.SCHEDULED) {
+			throw new ConflictException("Only scheduled inspections can be assigned to an inspector.");
+		}
+
 		InspectorDetails inspector = optionalInspector.get();
 		// Assign inspector
 		inspection.setInspector(inspector);
@@ -163,14 +174,14 @@ public class InspectionServiceImpl implements InspectionService {
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		// Get objects
 		InspectionDetails inspection = optionalInspection.get();
 
 		if (inspection.getStatus() != InspectionStatus.REPORT_SUBMITTED) {
-			throw new RuntimeException("Only submitted inspections can be reviewed.");
+			throw new ConflictException("Only submitted inspections can be reviewed.");
 		}
 		inspection.setStatus(InspectionStatus.UNDER_ADMIN_REVIEW);
 
@@ -199,7 +210,7 @@ public class InspectionServiceImpl implements InspectionService {
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		// Step 2 : Get Inspection
@@ -207,7 +218,7 @@ public class InspectionServiceImpl implements InspectionService {
 
 		// Step 3 : Validation
 		if (inspection.getStatus() != InspectionStatus.UNDER_ADMIN_REVIEW) {
-			throw new RuntimeException("Only inspections under admin review can be approved.");
+			throw new ConflictException("Only inspections under admin review can be approved.");
 		}
 
 		// Step 4 : Update Inspection
@@ -221,10 +232,16 @@ public class InspectionServiceImpl implements InspectionService {
 		shop.setBlocked(false);
 		shop.setServiceAvailabilityStatus(ServiceAvailabilityStatus.SERVICEABLE);
 
+		Double inspectionScore = inspection.getOverallInspectionScore();
+		if (inspectionScore != null) {
+			shop.setInspectionTrustScore(Math.round(inspectionScore * 100.0) / 100.0);
+		}
+
 		shop.setVerifiedAt(LocalDateTime.now());
 
 		// Step 6 : Save Shop
 		shopRepo.save(shop);
+		gutTrustScoreService.recalculateFinalScore(shop.getShopId());
 
 		// Step 7 : Save Inspection
 		InspectionDetails savedInspection = inspectionRepo.save(inspection);
@@ -239,7 +256,7 @@ public class InspectionServiceImpl implements InspectionService {
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
 		if (optionalInspection.isEmpty()) {
-			throw new RuntimeException("Inspection not found");
+			throw new ResourceNotFoundException("Inspection not found");
 		}
 
 		// Step 2 : Get Inspection
@@ -247,7 +264,7 @@ public class InspectionServiceImpl implements InspectionService {
 
 		// Step 3 : Validation
 		if (inspection.getStatus() != InspectionStatus.UNDER_ADMIN_REVIEW) {
-			throw new RuntimeException("Only inspections under admin review can be rejected.");
+			throw new ConflictException("Only inspections under admin review can be rejected.");
 		}
 
 		// Step 4 : Update Inspection
@@ -279,11 +296,11 @@ public class InspectionServiceImpl implements InspectionService {
 
 		// Step 1 : Find Existing Inspection
 		InspectionDetails oldInspection = inspectionRepo.findById(inspectionId)
-				.orElseThrow(() -> new RuntimeException("Inspection not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("Inspection not found"));
 
 		// Step 2 : Validation
 		if (oldInspection.getStatus() != InspectionStatus.UNDER_ADMIN_REVIEW) {
-			throw new RuntimeException("Only inspections under admin review can be sent for re-inspection.");
+			throw new ConflictException("Only inspections under admin review can be sent for re-inspection.");
 		}
 
 		// Step 3 : Close Old Inspection
@@ -312,7 +329,7 @@ public class InspectionServiceImpl implements InspectionService {
 
 		newInspection.setInspectionDate(LocalDateTime.now());
 
-		newInspection.setStatus(InspectionStatus.ASSIGNED);
+		newInspection.setStatus(InspectionStatus.SCHEDULED);
 
 		newInspection.setOverallInspectionScore(0.0);
 

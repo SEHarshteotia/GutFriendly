@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gutfriendly.app.admin.dto.request.InspectionRejectionRequest;
 import com.gutfriendly.app.admin.dto.request.ReInspectionRequest;
-import com.gutfriendly.app.admin.dto.request.ReviewInspectionRequest;
 import com.gutfriendly.app.admin.dto.response.InspectionResponse;
 import com.gutfriendly.app.admin.enums.InspectionStatus;
 import com.gutfriendly.app.admin.service.InspectionService;
