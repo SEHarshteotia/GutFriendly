@@ -3,7 +3,7 @@ package com.gutfriendly.app.vendor.dto;
 import java.sql.Timestamp;
 
 import com.gutfriendly.app.admin.model.VendorDetails;
-import com.gutfriendly.app.vendor.status.VendorStatus;
+import com.gutfriendly.app.vendor.enums.VendorStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

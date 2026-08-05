@@ -62,7 +62,7 @@ Restaurant partner onboarding, menu, orders, payouts.
 | Services | `vendor.service` (10) |
 | DTOs | `vendor.dto` (40+) |
 | Mappers | `vendor.mapper` (4) |
-| Enums/Status | `vendor.status`, `vendor.enums` |
+| Enums | `vendor.enums` (`VendorStatus`, `ShopOrderStatus`, `PayoutStatus`, `MenuItemCategory`) |
 | Entities | `vendor.model` (`ShopPayout` only) |
 
 **Uses:** `admin.model.ShopDetails`, `admin.model.FoodItemsDetails`, `orders.model.UserOrders`, `reviews.model.ShopReview`

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.gutfriendly.app.orders.enums.Status;
-import com.gutfriendly.app.vendor.status.ShopOrderStatus;
+import com.gutfriendly.app.vendor.enums.ShopOrderStatus;
 
 public final class OrderStatusMapper {
 

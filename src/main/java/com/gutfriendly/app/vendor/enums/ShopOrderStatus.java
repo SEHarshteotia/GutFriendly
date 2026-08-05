@@ -1,4 +1,4 @@
-package com.gutfriendly.app.vendor.status;
+package com.gutfriendly.app.vendor.enums;
 
 /**
  * Lifecycle status of a customer order from the vendor's perspective.

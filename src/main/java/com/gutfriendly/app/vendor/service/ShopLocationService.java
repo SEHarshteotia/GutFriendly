@@ -17,7 +17,7 @@ import com.gutfriendly.app.vendor.dto.ShopLocationRequestDTO;
 import com.gutfriendly.app.vendor.dto.ShopLocationResponseDTO;
 import com.gutfriendly.app.vendor.mapper.AddressMapper;
 import com.gutfriendly.app.vendor.mapper.ShopStatusMapper;
-import com.gutfriendly.app.vendor.status.VendorStatus;
+import com.gutfriendly.app.vendor.enums.VendorStatus;
 
 @Service
 public class ShopLocationService {

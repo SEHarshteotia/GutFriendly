@@ -1,9 +1,9 @@
-package com.gutfriendly.app.vendor.status;
+package com.gutfriendly.app.vendor.enums;
 
 /**
  * Onboarding and operational approval status for a vendor or shop.
  */
-public enum VendorStatus {//ShopStatus
+public enum VendorStatus {
 	/** Initial state after registration or shop creation. */
 	PENDING,
 	/** Location is within a serviceable pincode. */

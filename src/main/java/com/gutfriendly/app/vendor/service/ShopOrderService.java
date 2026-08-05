@@ -19,7 +19,7 @@ import com.gutfriendly.app.vendor.dto.ShopOrderDTO;
 import com.gutfriendly.app.vendor.dto.ShopOrderItemDTO;
 import com.gutfriendly.app.vendor.dto.UpdateOrderStatusRequestDTO;
 import com.gutfriendly.app.vendor.mapper.OrderStatusMapper;
-import com.gutfriendly.app.vendor.status.ShopOrderStatus;
+import com.gutfriendly.app.vendor.enums.ShopOrderStatus;
 
 @Service
 public class ShopOrderService {

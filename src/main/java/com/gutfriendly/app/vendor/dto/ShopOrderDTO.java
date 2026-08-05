@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.gutfriendly.app.vendor.status.ShopOrderStatus;
+import com.gutfriendly.app.vendor.enums.ShopOrderStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

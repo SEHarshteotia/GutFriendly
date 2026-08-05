@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.gutfriendly.app.vendor.model.ShopPayout;
-import com.gutfriendly.app.vendor.status.PayoutStatus;
+import com.gutfriendly.app.vendor.enums.PayoutStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

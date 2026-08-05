@@ -1,4 +1,4 @@
-package com.gutfriendly.app.vendor.status;
+package com.gutfriendly.app.vendor.enums;
 
 /**
  * Settlement status of a vendor payout record.

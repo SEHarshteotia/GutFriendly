@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.gutfriendly.app.admin.model.ShopDetails;
-import com.gutfriendly.app.vendor.status.PayoutStatus;
+import com.gutfriendly.app.vendor.enums.PayoutStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

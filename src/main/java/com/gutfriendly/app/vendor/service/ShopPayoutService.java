@@ -9,7 +9,7 @@ import com.gutfriendly.app.admin.model.ShopDetails;
 import com.gutfriendly.app.vendor.dto.ShopPayoutDTO;
 import com.gutfriendly.app.vendor.dto.ShopPayoutSummaryDTO;
 import com.gutfriendly.app.vendor.repository.ShopPayoutRepo;
-import com.gutfriendly.app.vendor.status.PayoutStatus;
+import com.gutfriendly.app.vendor.enums.PayoutStatus;
 
 @Service
 public class ShopPayoutService {

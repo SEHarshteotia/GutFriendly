@@ -104,7 +104,7 @@ com.gutfriendly.app
     ├── repository/     # 9 JPA repositories
     ├── model/          # 9 JPA entities
     ├── dto/            # Request/response DTOs
-    └── status/         # Enums (VendorStatus, StoreOrderStatus, PayoutStatus)
+    └── enums/          # VendorStatus, ShopOrderStatus, PayoutStatus, MenuItemCategory
 ```
 
 ### Controllers
@@ -473,6 +473,15 @@ The full dashboard (`StoreDashboardResponseDTO`) embeds `activeOrders`, `topSell
 ---
 
 ## 10. Enums & status machines
+
+### Vendor enums (`vendor.enums`)
+
+| Enum | Purpose |
+|------|---------|
+| `VendorStatus` | Vendor account + shop onboarding status |
+| `ShopOrderStatus` | Vendor-facing order lifecycle (`NEW`, `ACCEPTED`, …) |
+| `PayoutStatus` | Payout settlement status |
+| `MenuItemCategory` | Menu item category |
 
 ### VendorStatus (vendor account + shop onboarding)
 

@@ -43,8 +43,8 @@ import com.gutfriendly.app.vendor.mapper.OrderStatusMapper;
 import com.gutfriendly.app.reviews.model.ShopReview;
 import com.gutfriendly.app.reviews.repository.ShopReviewRepository;
 import com.gutfriendly.app.vendor.mapper.ShopStatusMapper;
-import com.gutfriendly.app.vendor.status.ShopOrderStatus;
-import com.gutfriendly.app.vendor.status.VendorStatus;
+import com.gutfriendly.app.vendor.enums.ShopOrderStatus;
+import com.gutfriendly.app.vendor.enums.VendorStatus;
 
 @Service
 public class ShopDashboardService {

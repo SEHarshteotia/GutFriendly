@@ -3,7 +3,7 @@ package com.gutfriendly.app.vendor.mapper;
 import com.gutfriendly.app.admin.enums.ServiceAvailabilityStatus;
 import com.gutfriendly.app.admin.enums.ShopStatus;
 import com.gutfriendly.app.admin.model.ShopDetails;
-import com.gutfriendly.app.vendor.status.VendorStatus;
+import com.gutfriendly.app.vendor.enums.VendorStatus;
 
 public final class ShopStatusMapper {
 

@@ -1,6 +1,6 @@
 package com.gutfriendly.app.vendor.dto;
 
-import com.gutfriendly.app.vendor.status.VendorStatus;
+import com.gutfriendly.app.vendor.enums.VendorStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

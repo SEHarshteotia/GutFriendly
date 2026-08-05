@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.gutfriendly.app.admin.model.ShopDetails;
 import com.gutfriendly.app.vendor.model.ShopPayout;
-import com.gutfriendly.app.vendor.status.PayoutStatus;
+import com.gutfriendly.app.vendor.enums.PayoutStatus;
 
 public interface ShopPayoutRepo extends JpaRepository<ShopPayout, Long> {
 

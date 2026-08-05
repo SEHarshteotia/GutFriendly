@@ -53,7 +53,7 @@ GutFriendly/
 │       ├── repository/   (9 repos)
 │       ├── model/        (9 entities)
 │       ├── dto/          (request/response types)
-│       ├── status/       (enums)
+│       ├── enums/        (VendorStatus, ShopOrderStatus, PayoutStatus, MenuItemCategory)
 │       └── util/         (PhoneNumberUtil)
 ├── src/main/resources/
 │   ├── application.properties

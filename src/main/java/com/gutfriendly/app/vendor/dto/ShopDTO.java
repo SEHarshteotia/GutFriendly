@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import com.gutfriendly.app.admin.model.ShopDetails;
 import com.gutfriendly.app.vendor.mapper.AddressMapper;
 import com.gutfriendly.app.vendor.mapper.ShopStatusMapper;
-import com.gutfriendly.app.vendor.status.VendorStatus;
+import com.gutfriendly.app.vendor.enums.VendorStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
