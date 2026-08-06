@@ -8,9 +8,9 @@ import {
   Star,
   Settings,
   LogOut,
-  Leaf,
   Plus,
 } from 'lucide-react'
+import GutFriendlyLogo from '@shared/GutFriendlyLogo'
 import { useAuth } from '../../context/AuthContext'
 import { useQuery } from '@tanstack/react-query'
 import { vendorApi } from '../../api/vendorApi'
@@ -37,9 +37,12 @@ export function Sidebar({ onAddShop }) {
 
   return (
     <aside className="flex w-64 flex-col bg-sidebar text-white">
-      <div className="flex items-center gap-2 border-b border-white/10 px-5 py-5">
-        <Leaf className="h-7 w-7 text-brand-500" />
-        <span className="text-lg font-bold">GutFriendly</span>
+      <div className="border-b border-white/10 px-5 py-5">
+        <GutFriendlyLogo
+          size="md"
+          theme="dark"
+          subtitle="Vendor Portal"
+        />
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">

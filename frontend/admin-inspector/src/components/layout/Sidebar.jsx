@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 
 import { NavLink } from "react-router-dom";
+import GutFriendlyLogo from "@shared/GutFriendlyLogo";
 
 export default function Sidebar() {
 
@@ -55,24 +56,11 @@ export default function Sidebar() {
         <div className="w-72 h-screen bg-white text-slate-600 flex flex-col border-r border-gray-200">
 
             {/* Brand */}
-            <div className="flex items-center gap-3 px-7 py-7 border-b border-gray-100">
-
-                <div className="relative w-11 h-11 rounded-2xl bg-[#173F33] flex items-center justify-center shadow-sm">
-                    <span className="text-lg font-extrabold text-white tracking-tight">G</span>
-                    <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white flex items-center justify-center border border-gray-100">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                    </span>
-                </div>
-
-                <div>
-                    <div className="text-xl font-bold text-[#173F33] tracking-tight leading-none">
-                        GutFriendly
-                    </div>
-                    <div className="text-[11px] uppercase tracking-widest text-gray-400 mt-1">
-                        Admin Console
-                    </div>
-                </div>
-
+            <div className="border-b border-gray-100 px-7 py-7">
+                <GutFriendlyLogo
+                    size="md"
+                    subtitle="Admin Console"
+                />
             </div>
 
             {/* Nav */}

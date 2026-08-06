@@ -1,7 +1,8 @@
-import { ArrowLeft, Leaf } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import GutFriendlyLogo from "@shared/GutFriendlyLogo";
 import { registerUser } from "../services/authService";
 
 function RegisterPage() {
@@ -71,9 +72,17 @@ function RegisterPage() {
         </Link>
 
         <div className="auth-visual-content">
-          <div className="auth-logo-icon">
-            <Leaf size={28} />
-          </div>
+          <Link
+            to="/"
+            className="auth-logo-link"
+            aria-label="Go to GutFriendly home"
+          >
+            <GutFriendlyLogo
+              size="lg"
+              theme="onDark"
+              showWordmark={false}
+            />
+          </Link>
 
           <h1>Make safer food choices every day.</h1>
 

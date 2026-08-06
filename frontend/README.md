@@ -8,6 +8,10 @@ All client applications live under this folder. Each app is an independent Vite 
 | **Vendor** | [`vendor/`](vendor/) | 5173 | Vendor portal — shops, menu, orders, payouts |
 | **Admin + Inspector** | [`admin-inspector/`](admin-inspector/) | 5175 | Admin dashboard, shops, inspections; inspector workflow |
 
+## Shared UI
+
+- [`shared/GutFriendlyLogo.jsx`](shared/GutFriendlyLogo.jsx) — brand mark used across all apps (import via `@shared/GutFriendlyLogo`)
+
 ## Quick start
 
 ```bash

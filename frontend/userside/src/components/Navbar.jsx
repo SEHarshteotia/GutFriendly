@@ -25,6 +25,13 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import GutFriendlyLogo from "@shared/GutFriendlyLogo";
+import {
+  ADMIN_LOGIN_URL,
+  INSPECTOR_LOGIN_URL,
+  VENDOR_LOGIN_URL,
+} from "../utils/constants";
+
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -110,15 +117,6 @@ function Navbar() {
     navigate("/login");
   }
 
-  function handleVendorClick(event) {
-    event.preventDefault();
-    setShowRoleMenu(false);
-
-    window.alert(
-      "Vendor portal is currently being integrated."
-    );
-  }
-
   const firstName =
     userName?.split(" ")[0] || "User";
 
@@ -133,11 +131,7 @@ function Navbar() {
             to={isLoggedIn ? "/home" : "/"}
             className="brand"
           >
-            <span className="brand-icon">
-              G
-            </span>
-
-            GutFriendly
+            <GutFriendlyLogo size="sm" />
           </Link>
 
           <nav className="nav-links">
@@ -247,10 +241,12 @@ function Navbar() {
                       </div>
                     </Link>
 
-                    <Link
-                      to="/"
+                    <a
+                      href={VENDOR_LOGIN_URL}
                       className="navbar-role-link"
-                      onClick={handleVendorClick}
+                      onClick={() =>
+                        setShowRoleMenu(false)
+                      }
                     >
                       <span className="navbar-role-link-icon">
                         <Store size={19} />
@@ -262,10 +258,10 @@ function Navbar() {
                           Manage shop and orders
                         </span>
                       </div>
-                    </Link>
+                    </a>
 
-                    <Link
-                      to="/inspector/dashboard"
+                    <a
+                      href={INSPECTOR_LOGIN_URL}
                       className="navbar-role-link"
                       onClick={() =>
                         setShowRoleMenu(false)
@@ -281,10 +277,10 @@ function Navbar() {
                           Complete inspections
                         </span>
                       </div>
-                    </Link>
+                    </a>
 
-                    <Link
-                      to="/admin/dashboard"
+                    <a
+                      href={ADMIN_LOGIN_URL}
                       className="navbar-role-link"
                       onClick={() =>
                         setShowRoleMenu(false)
@@ -300,7 +296,7 @@ function Navbar() {
                           Manage the platform
                         </span>
                       </div>
-                    </Link>
+                    </a>
                   </div>
                 )}
               </div>

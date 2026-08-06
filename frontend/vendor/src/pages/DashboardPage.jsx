@@ -1,21 +1,33 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from 'recharts'
-import { TrendingUp, TrendingDown, ShoppingBag, IndianRupee, Star } from 'lucide-react'
+  TrendingUp,
+  TrendingDown,
+  ShoppingBag,
+  IndianRupee,
+  Star,
+  ClipboardCheck,
+} from 'lucide-react'
 import { vendorApi } from '../api/vendorApi'
 import { useAuth } from '../context/AuthContext'
 import { Alert } from '../components/Alert'
 import { formatCurrency, formatTimeAgo, greeting, orderStatusClass } from '../utils/format'
 import { getErrorMessage } from '../utils/errors'
+
+function canBookInspection(dashboard) {
+  if (dashboard.status === 'APPROVED') {
+    return false
+  }
+
+  if (dashboard.nextAction === 'Book inspection.') {
+    return true
+  }
+
+  return dashboard.pendingRequirements?.some((requirement) =>
+    requirement.toLowerCase().includes('book an inspection'),
+  )
+}
 
 function KpiCard({ label, value, change, icon: Icon }) {
   const positive = change >= 0
@@ -38,6 +50,7 @@ export function DashboardPage() {
   const { vendor, selectedShopId } = useAuth()
   const queryClient = useQueryClient()
   const [inspectionDate, setInspectionDate] = useState('')
+  const [inspectionTime, setInspectionTime] = useState('10:00')
   const [bookingMessage, setBookingMessage] = useState('')
   const [bookingError, setBookingError] = useState('')
 
@@ -47,21 +60,17 @@ export function DashboardPage() {
     enabled: !!vendor && !!selectedShopId,
   })
 
-  const { data: chartData = [] } = useQuery({
-    queryKey: ['orderOverview', vendor?.vendorId, selectedShopId],
-    queryFn: () => vendorApi.getOrderOverview(vendor.vendorId, selectedShopId),
-    enabled: !!vendor && !!selectedShopId,
-  })
-
   const bookInspectionMutation = useMutation({
     mutationFn: () => {
-      const normalized = inspectionDate.length === 16 ? `${inspectionDate}:00` : inspectionDate
-      return vendorApi.bookInspection(vendor.vendorId, selectedShopId, normalized)
+      const timeValue = inspectionTime.length === 5 ? `${inspectionTime}:00` : inspectionTime
+      const inspectionDateTime = `${inspectionDate}T${timeValue}`
+      return vendorApi.bookInspection(vendor.vendorId, selectedShopId, inspectionDateTime)
     },
     onSuccess: () => {
       setBookingMessage('Inspection booked successfully.')
       setBookingError('')
       setInspectionDate('')
+      setInspectionTime('10:00')
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
     onError: (err) => {
@@ -91,6 +100,18 @@ export function DashboardPage() {
   }
 
   const { summary } = dashboard
+  const showInspectionBooking = canBookInspection(dashboard)
+  const needsLocationFirst =
+    !dashboard.serviceableLocation ||
+    dashboard.nextAction?.includes('location') ||
+    dashboard.nextAction?.includes('serviceable pincode')
+  const today = (() => {
+    const now = new Date()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    return `${now.getFullYear()}-${month}-${day}`
+  })()
+  const canSubmitInspection = Boolean(inspectionDate && inspectionTime)
 
   return (
     <div className="p-8">
@@ -106,33 +127,6 @@ export function DashboardPage() {
                 <li key={req}>{req}</li>
               ))}
             </ul>
-            {dashboard.nextAction === 'Book inspection.' && (
-              <div className="mt-4 flex flex-wrap items-end gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-amber-800">Inspection date & time</label>
-                  <input
-                    type="datetime-local"
-                    value={inspectionDate}
-                    onChange={(e) => {
-                      setInspectionDate(e.target.value)
-                      setBookingMessage('')
-                      setBookingError('')
-                    }}
-                    className="mt-1 rounded-lg border border-amber-200 bg-white px-3 py-2 text-sm text-gray-900"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => bookInspectionMutation.mutate()}
-                  disabled={!inspectionDate || bookInspectionMutation.isPending}
-                  className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
-                >
-                  {bookInspectionMutation.isPending ? 'Booking…' : 'Book inspection'}
-                </button>
-              </div>
-            )}
-            {bookingMessage && <p className="mt-2 text-sm text-green-700">{bookingMessage}</p>}
-            {bookingError && <p className="mt-2 text-sm text-red-700">{bookingError}</p>}
           </div>
         )}
       </div>
@@ -164,21 +158,76 @@ export function DashboardPage() {
         />
       </div>
 
-      <div className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-4 font-semibold text-gray-900">Order overview (today)</h2>
-        <ResponsiveContainer width="100%" height={260}>
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-            <YAxis yAxisId="left" tick={{ fontSize: 11 }} />
-            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
-            <Tooltip />
-            <Legend />
-            <Line yAxisId="left" type="monotone" dataKey="orders" stroke="#16a34a" name="Orders" />
-            <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#2563eb" name="Revenue" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      {dashboard.status !== 'APPROVED' && (
+        <div className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="flex items-start gap-3">
+            <div className="rounded-lg bg-brand-50 p-2 text-brand-600">
+              <ClipboardCheck className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <h2 className="font-semibold text-gray-900">Food safety inspection</h2>
+              <p className="mt-1 text-sm text-gray-600">{dashboard.nextAction}</p>
+
+              {showInspectionBooking && (
+                <div className="mt-4 flex flex-wrap items-end gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Inspection date
+                    </label>
+                    <input
+                      type="date"
+                      value={inspectionDate}
+                      min={today}
+                      onChange={(e) => {
+                        setInspectionDate(e.target.value)
+                        setBookingMessage('')
+                        setBookingError('')
+                      }}
+                      className="mt-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Inspection time
+                    </label>
+                    <input
+                      type="time"
+                      value={inspectionTime}
+                      step={900}
+                      onChange={(e) => {
+                        setInspectionTime(e.target.value)
+                        setBookingMessage('')
+                        setBookingError('')
+                      }}
+                      className="mt-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => bookInspectionMutation.mutate()}
+                    disabled={!canSubmitInspection || bookInspectionMutation.isPending}
+                    className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+                  >
+                    {bookInspectionMutation.isPending ? 'Booking…' : 'Book inspection'}
+                  </button>
+                </div>
+              )}
+
+              {needsLocationFirst && !showInspectionBooking && (
+                <Link
+                  to="/store"
+                  className="mt-4 inline-flex rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+                >
+                  Add shop location
+                </Link>
+              )}
+
+              {bookingMessage && <p className="mt-3 text-sm text-green-700">{bookingMessage}</p>}
+              {bookingError && <p className="mt-3 text-sm text-red-700">{bookingError}</p>}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">

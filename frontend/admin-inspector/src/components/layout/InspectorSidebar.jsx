@@ -6,6 +6,7 @@ import {
 } from "react-icons/fa";
 
 import { NavLink } from "react-router-dom";
+import GutFriendlyLogo from "@shared/GutFriendlyLogo";
 
 export default function InspectorSidebar() {
 
@@ -41,10 +42,12 @@ export default function InspectorSidebar() {
 
         <div className="w-72 bg-[#0F172A] text-white h-screen">
 
-            <div className="text-3xl font-bold p-8 border-b border-slate-700">
-
-                GutFriendly
-
+            <div className="border-b border-slate-700 p-8">
+                <GutFriendlyLogo
+                    size="md"
+                    theme="dark"
+                    subtitle="Inspector Portal"
+                />
             </div>
 
             <div className="mt-6">

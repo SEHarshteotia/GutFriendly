@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import GutFriendlyLogo from "@shared/GutFriendlyLogo";
 import { adminLogin, inspectorLogin } from "../../services/authService";
+import { USER_LANDING_URL } from "../../utils/constants";
 
 export default function Login() {
 
@@ -50,9 +52,14 @@ export default function Login() {
 
                 <div className="text-white text-center px-10">
 
-                    <h1 className="text-5xl font-bold mb-6">
-                        GutFriendly
-                    </h1>
+                    <GutFriendlyLogo
+                        href={USER_LANDING_URL}
+                        size="lg"
+                        theme="onDark"
+                        subtitle="Admin & Inspector"
+                        className="mx-auto flex-col items-center text-center"
+                        wordmarkClassName="text-center"
+                    />
 
                     <p className="text-xl leading-9 opacity-90">
 
@@ -78,6 +85,14 @@ export default function Login() {
                 <div className="bg-white shadow-xl rounded-xl w-[420px] p-10">
 
                     <div className="text-center mb-8">
+
+                        <GutFriendlyLogo
+                            href={USER_LANDING_URL}
+                            size="md"
+                            subtitle="Admin & Inspector"
+                            className="mx-auto mb-4 flex-col items-center text-center lg:hidden"
+                            wordmarkClassName="text-center"
+                        />
 
                         <h2 className="text-3xl font-bold text-gray-800">
 

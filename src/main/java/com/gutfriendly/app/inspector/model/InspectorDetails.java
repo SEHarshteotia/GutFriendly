@@ -57,6 +57,7 @@ public class InspectorDetails {
 	@Column(length = 100)
 	private String assignedZone;
 
+	@Enumerated(EnumType.STRING)
 	@Column(length = 100)
 	private InspectorDesignation designation = InspectorDesignation.SENIOR_INSPECTOR;
 

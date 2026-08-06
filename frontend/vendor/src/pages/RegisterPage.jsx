@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Leaf } from 'lucide-react'
+import GutFriendlyLogo from '@shared/GutFriendlyLogo'
 import { vendorApi } from '../api/vendorApi'
 import { Alert } from '../components/Alert'
+import { USER_LANDING_URL } from '../utils/constants'
 import { getErrorMessage } from '../utils/errors'
 
 export function RegisterPage() {
@@ -66,10 +67,16 @@ export function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="mb-8 flex flex-col items-center">
-          <Leaf className="h-12 w-12 text-brand-600" />
-          <h1 className="mt-3 text-2xl font-bold text-gray-900">Create account</h1>
+        <div className="mb-8 flex justify-center">
+          <GutFriendlyLogo
+            href={USER_LANDING_URL}
+            size="md"
+            subtitle="Vendor Portal"
+            className="flex-col text-center"
+            wordmarkClassName="text-center"
+          />
         </div>
+        <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">Create account</h1>
         <form
           onSubmit={handleSubmit}
           className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
