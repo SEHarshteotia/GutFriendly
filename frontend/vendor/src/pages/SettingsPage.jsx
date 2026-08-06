@@ -143,7 +143,7 @@ export function SettingsPage() {
               className="w-full rounded-lg border border-gray-300 px-3 py-2"
             />
             <input
-              placeholder="Aadhar"
+              placeholder="Aadhar (optional)"
               value={form.aadharNo}
               onChange={(e) => {
                 clearAlerts()
@@ -152,7 +152,7 @@ export function SettingsPage() {
               className="w-full rounded-lg border border-gray-300 px-3 py-2"
             />
             <input
-              placeholder="PAN"
+              placeholder="PAN (optional)"
               value={form.panNo}
               onChange={(e) => {
                 clearAlerts()

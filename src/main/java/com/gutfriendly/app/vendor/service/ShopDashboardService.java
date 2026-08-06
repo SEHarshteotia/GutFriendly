@@ -49,7 +49,7 @@ import com.gutfriendly.app.vendor.enums.VendorStatus;
 @Service
 public class ShopDashboardService {
 
-	private static final int REQUIRED_PROFILE_FIELDS = 6;
+	private static final int REQUIRED_PROFILE_FIELDS = 5;
 
 	private final VendorDetailsRepository vendorRepository;
 	private final ShopDetailsRepository shopRepository;
@@ -309,7 +309,6 @@ public class ShopDashboardService {
 		completed += hasText(vendor.getLastName()) ? 1 : 0;
 		completed += hasText(vendor.getPhoneNo()) ? 1 : 0;
 		completed += hasText(vendor.getEmail()) ? 1 : 0;
-		completed += hasText(vendor.getAdharNo()) || hasText(vendor.getPanNo()) ? 1 : 0;
 		completed += address != null ? 1 : 0;
 
 		return Math.round((completed * 100f) / REQUIRED_PROFILE_FIELDS);
@@ -323,10 +322,6 @@ public class ShopDashboardService {
 			pendingRequirements.add("Add email address");
 		}
 
-		if (!hasText(vendor.getAdharNo()) && !hasText(vendor.getPanNo())) {
-			pendingRequirements.add("Add PAN or Aadhar details");
-		}
-
 		if (address == null) {
 			pendingRequirements.add("Add shop location for " + shop.getShopName());
 		}
@@ -335,8 +330,7 @@ public class ShopDashboardService {
 			pendingRequirements.add("Choose a serviceable location for " + shop.getShopName());
 		}
 
-		if (shop.getServiceAvailabilityStatus() == ServiceAvailabilityStatus.SERVICEABLE
-				&& !hasActiveInspection(shop.getShopId())) {
+		if (requiresInspectionBooking(shop, status)) {
 			pendingRequirements.add("Book an inspection for " + shop.getShopName());
 		}
 
@@ -368,7 +362,7 @@ public class ShopDashboardService {
 
 		Optional<InspectionDetails> activeInspection = findActiveInspection(shop.getShopId());
 		if (activeInspection.isEmpty()) {
-			if (shop.getStatus() == ShopStatus.VERIFIED) {
+			if (!requiresInspectionBooking(shop, status)) {
 				return "Shop is ready for operations.";
 			}
 			return "Book inspection.";
@@ -386,6 +380,22 @@ public class ShopDashboardService {
 	private boolean hasActiveInspection(int shopId) {
 		return inspectionRepository.existsByShop_ShopIdAndStatusIn(shopId,
 				InspectionStatus.activeInspectionStatuses());
+	}
+
+	private boolean requiresInspectionBooking(ShopDetails shop, VendorStatus vendorStatus) {
+		if (vendorStatus == VendorStatus.APPROVED
+				|| vendorStatus == VendorStatus.SUSPENDED
+				|| vendorStatus == VendorStatus.REJECTED) {
+			return false;
+		}
+		if (shop.getStatus() == ShopStatus.VERIFIED || shop.getVerifiedAt() != null) {
+			return false;
+		}
+		if (inspectionRepository.existsByShop_ShopIdAndStatus(shop.getShopId(), InspectionStatus.APPROVED)) {
+			return false;
+		}
+		return shop.getServiceAvailabilityStatus() == ServiceAvailabilityStatus.SERVICEABLE
+				&& !hasActiveInspection(shop.getShopId());
 	}
 
 	private Optional<InspectionDetails> findActiveInspection(int shopId) {

@@ -44,14 +44,6 @@ export function RegisterPage() {
       setError('Password must be at least 6 characters.')
       return
     }
-    if (!form.aadharNo.trim()) {
-      setError('Aadhaar number is required.')
-      return
-    }
-    if (!form.panNo.trim()) {
-      setError('PAN number is required.')
-      return
-    }
 
     setLoading(true)
     try {
@@ -121,7 +113,7 @@ export function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Aadhaar number</label>
+              <label className="block text-sm font-medium text-gray-700">Aadhaar number (optional)</label>
               <input
                 value={form.aadharNo}
                 onChange={(e) => update('aadharNo', e.target.value)}
@@ -130,7 +122,7 @@ export function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">PAN</label>
+              <label className="block text-sm font-medium text-gray-700">PAN (optional)</label>
               <input
                 value={form.panNo}
                 onChange={(e) => update('panNo', e.target.value.toUpperCase())}

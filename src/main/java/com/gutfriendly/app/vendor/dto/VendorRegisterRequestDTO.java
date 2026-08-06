@@ -7,6 +7,7 @@ import lombok.Data;
  * <p>
  * Used by {@code POST /vendor/register}.
  * Required fields: {@code fName}, {@code lName}, {@code phoneNo}, {@code password}.
+ * Optional fields: {@code mName}, {@code email}, {@code aadharNo}, {@code panNo}.
  */
 @Data
 public class VendorRegisterRequestDTO {

@@ -32,7 +32,7 @@ public class VendorDetails {
 	    @Column(name = "email", length = 100,unique = true)
 	    private String email;
 
-	    @Column(name = "adhar_no", nullable = false,unique = true)
+	    @Column(name = "adhar_no", nullable = true, unique = true)
 	    private String adharNo;
 
 	    @Column(name = "pan_no", nullable = true, length = 20, unique = true)

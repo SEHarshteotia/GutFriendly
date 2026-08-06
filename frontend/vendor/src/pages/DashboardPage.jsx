@@ -100,6 +100,12 @@ export function DashboardPage() {
   }
 
   const { summary } = dashboard
+  const pendingRequirements =
+    dashboard.status === 'APPROVED'
+      ? dashboard.pendingRequirements.filter(
+          (requirement) => !requirement.toLowerCase().includes('book an inspection'),
+        )
+      : dashboard.pendingRequirements
   const showInspectionBooking = canBookInspection(dashboard)
   const needsLocationFirst =
     !dashboard.serviceableLocation ||
@@ -119,11 +125,11 @@ export function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-900">
           {greeting()}, {dashboard.shopName}!
         </h1>
-        {dashboard.pendingRequirements.length > 0 && (
+        {pendingRequirements.length > 0 && (
           <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
             <p className="text-sm font-medium text-amber-800">{dashboard.nextAction}</p>
             <ul className="mt-2 list-inside list-disc text-sm text-amber-700">
-              {dashboard.pendingRequirements.map((req) => (
+              {pendingRequirements.map((req) => (
                 <li key={req}>{req}</li>
               ))}
             </ul>

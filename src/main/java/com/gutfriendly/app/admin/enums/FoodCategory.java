@@ -1,18 +1,18 @@
 package com.gutfriendly.app.admin.enums;
 
+/**
+ * FSSAI DART (Detect Adulteration with Rapid Test) food categories for the test catalog.
+ */
 public enum FoodCategory {
-	MILK_AND_MILK_PRODUCTS,
-
+	DAIRY,
 	OILS_AND_FATS,
-
 	SUGAR_AND_HONEY,
-
-	FOOD_GRAINS_AND_FLOURS,
-
-	SPICES_AND_CONDIMENTS,
-
-	BEVERAGES,
-
-	SALT
-
+	METALS,
+	GRAINS_AND_PULSES,
+	FLOUR,
+	SPICES,
+	SALT,
+	OILSEEDS,
+	VEGETABLES,
+	BEVERAGES
 }

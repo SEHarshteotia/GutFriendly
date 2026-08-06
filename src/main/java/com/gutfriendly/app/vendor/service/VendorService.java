@@ -36,8 +36,8 @@ public class VendorService {
 		vendor.setPhoneNo(PhoneNumberUtil.normalize(request.getPhoneNo()));
 		vendor.setPassword(request.getPassword());
 		vendor.setEmail(isBlank(request.getEmail()) ? null : request.getEmail().trim());
-		vendor.setAdharNo(request.getAadharNo().trim());
-		vendor.setPanNo(request.getPanNo().trim());
+		vendor.setAdharNo(isBlank(request.getAadharNo()) ? null : request.getAadharNo().trim());
+		vendor.setPanNo(isBlank(request.getPanNo()) ? null : request.getPanNo().trim());
 		vendor.setJoiningDate(LocalDateTime.now());
 		vendor.setActive(true);
 
@@ -67,12 +67,6 @@ public class VendorService {
 		}
 		if (isBlank(request.getPassword())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is required");
-		}
-		if (isBlank(request.getAadharNo())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Aadhar number is required");
-		}
-		if (isBlank(request.getPanNo())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "PAN number is required");
 		}
 	}
 
