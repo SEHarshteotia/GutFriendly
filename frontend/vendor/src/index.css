@@ -1,23 +1,81 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap");
 @import 'tailwindcss';
 @source "../../shared";
 
 @theme {
   --color-brand-50: #f0fdf4;
   --color-brand-100: #dcfce7;
-  --color-brand-500: #22c55e;
-  --color-brand-600: #16a34a;
-  --color-brand-700: #15803d;
-  --color-sidebar: #0f172a;
-  --color-sidebar-hover: #1e293b;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-brand-500: #087454;
+  --color-brand-600: #087454;
+  --color-brand-700: #064e3b;
+  --color-sidebar: #ffffff;
+  --color-sidebar-hover: #f0fdf4;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+}
+
+:root {
+  --green-dark: #064e3b;
+  --green-main: #087454;
+  --green-light: #dcfce7;
+  --green-extra-light: #f0fdf4;
+  --background: #f7faf7;
+  --text: #17231d;
+  --muted: #68756d;
+  --border: #dce5df;
 }
 
 body {
   margin: 0;
   font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--background);
   -webkit-font-smoothing: antialiased;
 }
 
 #root {
   min-height: 100vh;
+}
+
+h1, h2, h3, h4 { font-family: "Manrope", sans-serif; letter-spacing: -0.025em; color: var(--green-dark); }
+.gf-shell { background: radial-gradient(circle at 88% 5%, #e9f9ef 0, transparent 24rem), var(--background); }
+.gf-main > div { width: min(100%, 1440px); margin-inline: auto; }
+.portal-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; color: var(--text); background: rgba(255,255,255,.96); border-right: 1px solid var(--border); box-shadow: 12px 0 40px rgba(6,78,59,.035); }
+.portal-brand, .portal-shop, .portal-logout { border-color: var(--border); }
+.portal-nav-link { color: var(--muted); }
+.portal-nav-link:hover { background: var(--green-extra-light); color: var(--green-main); }
+.portal-nav-link.is-active { background: var(--green-main); color: white; box-shadow: 0 8px 20px rgba(8,116,84,.18); }
+.portal-nav-link.is-active svg { color: white; }
+.portal-shop select { border-color: var(--border); background: white; color: var(--text); outline: none; }
+.portal-shop select:focus { border-color: var(--green-main); box-shadow: 0 0 0 3px rgba(8,116,84,.1); }
+.portal-add { border-color: #a8c9bb; color: var(--green-main); background: var(--green-extra-light); }
+.portal-add:hover { border-color: var(--green-main); background: var(--green-light); }
+.portal-logout { color: var(--muted); }
+.portal-logout:hover { color: #b42318; background: #fff5f4; }
+
+main [class*="bg-white"][class*="rounded-"], main [class*="bg-white"][class*="border"] { border-color: var(--border); box-shadow: 0 10px 35px rgba(23,35,29,.045); }
+main [class*="rounded-xl"], main [class*="rounded-2xl"] { border-radius: 18px; }
+main input, main select, main textarea, form input, form select, form textarea { border-color: var(--border); background: #fff; color: var(--text); border-radius: 12px; min-height: 44px; transition: border-color .2s, box-shadow .2s; }
+main input:focus, main select:focus, main textarea:focus, form input:focus, form select:focus, form textarea:focus { border-color: var(--green-main); box-shadow: 0 0 0 3px rgba(8,116,84,.1); outline: none; }
+button { cursor: pointer; }
+button[class*="bg-brand"], a[class*="bg-brand"] { border-radius: 12px; box-shadow: 0 6px 16px rgba(8,116,84,.16); }
+table { border-collapse: separate; border-spacing: 0; }
+thead { background: var(--green-extra-light); }
+th { color: var(--green-dark) !important; font-weight: 700 !important; }
+tbody tr { transition: background .15s; }
+tbody tr:hover { background: #fbfefc; }
+.vendor-auth { position: relative; overflow: hidden; background: radial-gradient(circle at 12% 12%, #dff7e8 0, transparent 25rem), radial-gradient(circle at 90% 88%, #e8f8ed 0, transparent 22rem), var(--background); }
+.vendor-auth::before { content: ""; position: fixed; width: 360px; height: 360px; border-radius: 50%; right: -150px; top: -150px; background: rgba(8,116,84,.06); }
+.vendor-auth > div { position: relative; z-index: 1; }
+.vendor-auth-card { border-color: var(--border); border-radius: 24px; box-shadow: 0 22px 60px rgba(23,35,29,.09); }
+
+@media (max-width: 900px) {
+  .gf-shell { display: block; }
+  .portal-sidebar { position: relative; width: 100%; height: auto; }
+  .portal-brand { padding-block: 16px; }
+  .portal-nav { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; }
+  .portal-nav-link { white-space: nowrap; }
+  .portal-shop { display: none; }
+  .portal-logout { position: absolute; right: 12px; top: 12px; border: 0; padding: 10px; }
+  .portal-logout { font-size: 0; }
+  .gf-main > div { padding: 20px !important; }
 }

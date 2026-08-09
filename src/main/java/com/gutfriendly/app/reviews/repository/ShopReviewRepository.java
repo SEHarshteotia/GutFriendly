@@ -36,4 +36,41 @@ public interface ShopReviewRepository extends JpaRepository<ShopReview, Integer>
 	List<ShopReview> findTop3ByShop_ShopIdAndActiveTrueOrderByCreatedAtDesc(int shopId);
 
 	List<ShopReview> findByShop_ShopIdAndActiveTrueAndRatingOrderByCreatedAtDesc(int shopId, int rating);
-}
+	
+	// ---- Admin: platform-wide review moderation & listing ----
+
+		
+		
+		Page<ShopReview> findByActiveTrue(Pageable pageable);
+
+		Page<ShopReview> findByRatingAndActiveTrue(int rating, Pageable pageable);
+
+		Page<ShopReview> findByShop_ShopNameContainingIgnoreCaseAndActiveTrue(String shopName, Pageable pageable);
+
+		Page<ShopReview> findByShop_ShopNameContainingIgnoreCaseAndRatingAndActiveTrue(String shopName, int rating,
+				Pageable pageable);
+
+		Page<ShopReview> findByShop_ShopIdAndActiveTrue(int shopId, Pageable pageable);
+
+		Page<ShopReview> findByShop_ShopIdAndRatingAndActiveTrue(int shopId, int rating, Pageable pageable);
+
+		@Query("""
+				SELECT AVG(r.rating)
+				FROM ShopReview r
+				WHERE r.active = true
+				""")
+		Double calculatePlatformAverageRating();
+
+		long countByActiveTrue();
+
+		long countByRatingAndActiveTrue(int rating);
+
+		@Query("""
+				SELECT COUNT(DISTINCT r.shop.shopId)
+				FROM ShopReview r
+				WHERE r.active = true
+				""")
+		long countDistinctShopsWithReviews();
+	}
+
+

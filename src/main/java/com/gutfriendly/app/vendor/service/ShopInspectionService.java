@@ -10,9 +10,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.gutfriendly.app.admin.dto.response.InspectionResponse;
 import com.gutfriendly.app.admin.enums.InspectionStatus;
 import com.gutfriendly.app.admin.enums.ServiceAvailabilityStatus;
+import com.gutfriendly.app.admin.enums.ShopStatus;
 import com.gutfriendly.app.admin.model.ShopDetails;
 import com.gutfriendly.app.admin.model.VendorDetails;
 import com.gutfriendly.app.admin.repository.InspectionDetailsRepository;
+import com.gutfriendly.app.admin.repository.ShopDetailsRepository;
 import com.gutfriendly.app.inspector.mapper.InspectionMapper;
 import com.gutfriendly.app.inspector.model.InspectionDetails;
 import com.gutfriendly.app.vendor.dto.BookInspectionRequestDTO;
@@ -22,10 +24,13 @@ public class ShopInspectionService {
 
 	private final VendorContextService contextService;
 	private final InspectionDetailsRepository inspectionRepository;
+	private final ShopDetailsRepository shopRepository;
 
-	ShopInspectionService(VendorContextService contextService, InspectionDetailsRepository inspectionRepository) {
+	ShopInspectionService(VendorContextService contextService, InspectionDetailsRepository inspectionRepository,
+			ShopDetailsRepository shopRepository) {
 		this.contextService = contextService;
 		this.inspectionRepository = inspectionRepository;
+		this.shopRepository = shopRepository;
 	}
 
 	@Transactional
@@ -46,15 +51,29 @@ public class ShopInspectionService {
 					"Shop location must be saved before booking an inspection");
 		}
 
-		if (shop.getServiceAvailabilityStatus() != ServiceAvailabilityStatus.SERVICEABLE) {
+		if (shop.getServiceAvailabilityStatus() != ServiceAvailabilityStatus.SERVICEABLE
+				&& shop.getStatus() != ShopStatus.REJECTED) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Inspection can only be booked for a shop in a serviceable pincode area");
+		}
+
+		if (shop.getStatus() == ShopStatus.VERIFIED) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"This shop is already verified and does not need another inspection");
 		}
 
 		if (inspectionRepository.existsByShop_ShopIdAndStatusIn(shop.getShopId(),
 				InspectionStatus.activeInspectionStatuses())) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT,
 					"This shop already has an active inspection in progress");
+		}
+
+		// After rejection (or first booking), move shop back into review pipeline
+		if (shop.getStatus() == ShopStatus.REJECTED || shop.getStatus() == null) {
+			shop.setStatus(ShopStatus.PENDING);
+			shop.setIsOpen(false);
+			shop.setServiceAvailabilityStatus(ServiceAvailabilityStatus.SERVICEABLE);
+			shopRepository.save(shop);
 		}
 
 		InspectionDetails inspection = new InspectionDetails();

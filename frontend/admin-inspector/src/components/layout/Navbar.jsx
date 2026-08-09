@@ -15,7 +15,7 @@ export default function Navbar() {
 
     return (
 
-        <div className="bg-white border-b border-gray-200 h-20 px-8 flex justify-between items-center">
+        <header className="portal-topbar bg-white h-20 px-8 flex justify-between items-center">
 
             <div className="relative">
                 <FaSearch
@@ -70,7 +70,7 @@ export default function Navbar() {
 
             </div>
 
-        </div>
+        </header>
 
     );
 

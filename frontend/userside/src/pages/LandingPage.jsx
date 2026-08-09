@@ -13,6 +13,13 @@ import {
 
 import { Link } from "react-router-dom";
 
+import {
+  ADMIN_LOGIN_URL,
+  INSPECTOR_LOGIN_URL,
+  VENDOR_LOGIN_URL,
+  VENDOR_REGISTER_URL,
+} from "../utils/constants";
+
 const rolePortals = [
   {
     role: "Customer",
@@ -29,9 +36,9 @@ const rolePortals = [
     icon: Store,
     description:
       "Register your food business, manage your menu and process customer orders.",
-    loginPath: "/portal/vendor",
+    loginPath: VENDOR_LOGIN_URL,
     loginText: "Vendor portal",
-    registerPath: "/vendor/register",
+    registerPath: VENDOR_REGISTER_URL,
     registerText: "Register business",
   },
   {
@@ -39,7 +46,7 @@ const rolePortals = [
     icon: ClipboardCheck,
     description:
       "View assigned establishments, complete checklists and submit inspection reports.",
-    loginPath: "/inspector/dashboard",
+    loginPath: INSPECTOR_LOGIN_URL,
     loginText: "Inspector portal",
   },
   {
@@ -47,7 +54,7 @@ const rolePortals = [
     icon: ShieldCheck,
     description:
       "Approve vendors, assign inspectors and manage GutFriendly operations.",
-    loginPath: "/admin/dashboard",
+    loginPath: ADMIN_LOGIN_URL,
     loginText: "Admin portal",
   },
 ];
@@ -174,22 +181,22 @@ function LandingPage() {
                 <p>{portal.description}</p>
 
                 <div className="role-access-actions">
-                  <Link
-                    to={portal.loginPath}
+                  <a
+                    href={portal.loginPath}
                     className="role-login-link"
                   >
                     <LogIn size={17} />
                     {portal.loginText}
-                  </Link>
+                  </a>
 
                   {portal.registerPath && (
-                    <Link
-                      to={portal.registerPath}
+                    <a
+                      href={portal.registerPath}
                       className="role-register-link"
                     >
                       <UserPlus size={17} />
                       {portal.registerText}
-                    </Link>
+                    </a>
                   )}
                 </div>
               </article>

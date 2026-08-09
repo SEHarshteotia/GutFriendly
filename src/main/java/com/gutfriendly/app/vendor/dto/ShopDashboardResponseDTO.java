@@ -32,6 +32,8 @@ public class ShopDashboardResponseDTO {
 	private boolean serviceableLocation;
 	private int profileCompletionPercentage;
 	private String nextAction;
+	/** Admin rejection / reinspection remarks shown on the vendor dashboard. */
+	private String rejectionReason;
 	private List<String> pendingRequirements;
 	private ShopDashboardSummaryDTO summary;
 	private List<ShopActiveOrderDTO> activeOrders;

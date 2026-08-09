@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://localhost:8080/admin/inspections";
+const API_URL = `${import.meta.env.VITE_API_BASE_URL ?? ""}/admin/inspections`;
 
 
 export const getAllInspections = async (
@@ -161,4 +161,3 @@ export const getInspectionDetails = async (inspectionId) => {
 
     return response.data;
 };
-

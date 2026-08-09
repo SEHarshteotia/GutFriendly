@@ -246,6 +246,7 @@ public class InspectionServiceImpl implements InspectionService {
 		shop.setBlocked(false);
 		shop.setServiceAvailabilityStatus(ServiceAvailabilityStatus.SERVICEABLE);
 		shop.setIsOpen(true);
+		shop.setAdminRemarks(null);
 
 		Double inspectionScore = inspection.getOverallInspectionScore();
 		if (inspectionScore != null) {
@@ -285,15 +286,19 @@ public class InspectionServiceImpl implements InspectionService {
 		// Step 4 : Update Inspection
 		inspection.setStatus(InspectionStatus.REJECTED);
 		inspection.setCompletedAt(LocalDateTime.now());
-
+		inspection.setReviewedByAdmin(true);
+		inspection.setReviewedAt(LocalDateTime.now());
 		inspection.setAdminRemarks(rejectionReason);
 
-		// Step 5 : Update Shop
+		// Step 5 : Update Shop — keep serviceable so vendor can rebook
 		ShopDetails shop = inspection.getShop();
 
 		shop.setStatus(ShopStatus.REJECTED);
 		shop.setBlocked(false);
-		shop.setServiceAvailabilityStatus(ServiceAvailabilityStatus.NOT_SERVICEABLE);
+		shop.setIsOpen(false);
+		shop.setVerifiedAt(null);
+		shop.setAdminRemarks(rejectionReason);
+		shop.setServiceAvailabilityStatus(ServiceAvailabilityStatus.SERVICEABLE);
 
 		// Step 6 : Save Shop
 		shopRepo.save(shop);
@@ -327,12 +332,15 @@ public class InspectionServiceImpl implements InspectionService {
 
 		inspectionRepo.save(oldInspection);
 
-		// Step 4 : Update Shop
+		// Step 4 : Update Shop — keep serviceable; new inspection is already scheduled
 		ShopDetails shop = oldInspection.getShop();
 
 		shop.setStatus(ShopStatus.PENDING);
 		shop.setBlocked(false);
-		shop.setServiceAvailabilityStatus(ServiceAvailabilityStatus.NOT_SERVICEABLE);
+		shop.setIsOpen(false);
+		shop.setVerifiedAt(null);
+		shop.setAdminRemarks(reason);
+		shop.setServiceAvailabilityStatus(ServiceAvailabilityStatus.SERVICEABLE);
 
 		shopRepo.save(shop);
 

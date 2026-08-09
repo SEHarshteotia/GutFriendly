@@ -57,7 +57,7 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
+    <div className="vendor-auth flex min-h-screen items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         <div className="mb-8 flex justify-center">
           <GutFriendlyLogo
@@ -71,7 +71,7 @@ export function RegisterPage() {
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">Create account</h1>
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
+          className="vendor-auth-card rounded-2xl border bg-white p-8"
         >
           {error && <Alert variant="error" message={error} onDismiss={() => setError('')} className="mb-4" />}
           <div className="space-y-4">

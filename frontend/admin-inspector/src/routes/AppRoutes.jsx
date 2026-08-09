@@ -14,6 +14,7 @@ import InspectorDashboard from "../pages/inspector/InspectorDashboard";
 import AssignedInspections from "../pages/inspector/AssignedInspections";
 import InspectionForm from "../pages/inspector/InspectionForm";
 import InspectionHistory from "../pages/inspector/InspectionHistory";
+import Reviews from "../pages/admin/Reviews";
 
 import NotFound from "../pages/common/NotFound";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -40,6 +41,8 @@ export default function AppRoutes() {
 
                 <Route path="shops/:shopId" element={<ShopDetails />} />
 
+                
+
      <Route
     path="shops/:shopId/inspections"
     element={<ShopInspectionHistory />}
@@ -55,7 +58,17 @@ export default function AppRoutes() {
                     element={<Inspectors />}
                 />
 
+
+                                <Route
+                                    path="reviews"
+                                    element={<Reviews />}
+                                />
+                
+                          
+
             </Route>
+
+            
 
             {/* INSPECTOR */}
 

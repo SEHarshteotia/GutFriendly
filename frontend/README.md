@@ -1,37 +1,64 @@
-# GutFriendly Frontends
+# GutFriendly Unified Frontend
 
-All client applications live under this folder. Each app is an independent Vite + React project with its own `package.json`.
+All three client apps run from **one origin** on port `5173`:
 
-| App | Path | Port (dev) | Role |
-|-----|------|------------|------|
-| **User (consumer)** | [`userside/`](userside/) | 5174 | Register, home, shops, cart, wishlist, orders, reviews |
-| **Vendor** | [`vendor/`](vendor/) | 5173 | Vendor portal — shops, menu, orders, payouts |
-| **Admin + Inspector** | [`admin-inspector/`](admin-inspector/) | 5175 | Admin dashboard, shops, inspections; inspector workflow |
+| Path | App |
+|------|-----|
+| `/` | Customer site and landing |
+| `/vendor-portal/` | Vendor portal |
+| `/staff-portal/` | Admin and inspector portal |
+
+API calls on the same origin (`/users`, `/vendor`, `/admin`, `/inspector`, …) are
+proxied to Spring Boot, so the browser does not depend on CORS or separate
+frontend ports.
+
+## Run locally (recommended)
+
+1. Start MySQL and create the `gutfriendly` database.
+2. Set `DB_PASSWORD` (plus `DB_URL`/`DB_USERNAME` if needed).
+3. From the repository root, start Spring Boot with `mvnw.cmd spring-boot:run`.
+4. In this directory:
+
+```bash
+npm run install:all
+npm run dev
+```
+
+Open:
+
+- Customer / landing: http://localhost:5173/
+- Vendor login: http://localhost:5173/vendor-portal/login
+- Staff login: http://localhost:5173/staff-portal/login
+
+Override the backend with `BACKEND_URL` and the listen port with `PORT` if needed.
+
+## Production-style serve
+
+```bash
+npm run build
+npm start
+```
+
+`npm run build` builds each Vite app and assembles them into `dist/`.
+`npm start` serves that folder and proxies API traffic to
+`http://localhost:8080` by default.
+
+## Source applications
+
+Each app remains an independent Vite + React project:
+
+| App | Path | Role |
+|-----|------|------|
+| **User (consumer)** | [`userside/`](userside/) | Register, home, shops, cart, wishlist, orders, reviews |
+| **Vendor** | [`vendor/`](vendor/) | Shops, menu, orders, payouts |
+| **Admin + Inspector** | [`admin-inspector/`](admin-inspector/) | Admin dashboard and inspector workflow |
+
+Isolated per-app `npm run dev` still works for focused work, but the default
+workflow is the unified server above.
 
 ## Shared UI
 
 - [`shared/GutFriendlyLogo.jsx`](shared/GutFriendlyLogo.jsx) — brand mark used across all apps (import via `@shared/GutFriendlyLogo`)
-
-## Quick start
-
-```bash
-# User app
-cd frontend/userside && npm install && npm run dev
-
-# Vendor app
-cd frontend/vendor && npm install && npm run dev
-
-# Admin + Inspector app
-cd frontend/admin-inspector && npm install && npm run dev
-```
-
-## Production build
-
-```bash
-cd frontend/<app> && npm run build
-```
-
-Backend API base URL: `http://localhost:8080` (see each app's `vite.config.js` and `VITE_API_BASE_URL`).
 
 ## Integration reports
 

@@ -40,12 +40,11 @@ export default function InspectorSidebar() {
 
     return (
 
-        <div className="w-72 bg-[#0F172A] text-white h-screen">
+        <aside className="portal-sidebar w-72 h-screen">
 
-            <div className="border-b border-slate-700 p-8">
+            <div className="border-b p-7">
                 <GutFriendlyLogo
                     size="md"
-                    theme="dark"
                     subtitle="Inspector Portal"
                 />
             </div>
@@ -70,9 +69,9 @@ export default function InspectorSidebar() {
 
                                     isActive
 
-                                        ? "bg-green-600"
+                                        ? "portal-link-active"
 
-                                        : "hover:bg-slate-800"
+                                        : "portal-link"
 
                                 }`
 
@@ -92,7 +91,7 @@ export default function InspectorSidebar() {
 
             </div>
 
-        </div>
+        </aside>
 
     );
 

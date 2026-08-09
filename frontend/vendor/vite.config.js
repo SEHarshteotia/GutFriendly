@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
+  base: '/vendor-portal/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -18,7 +19,11 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/vendor': 'http://localhost:8080',
+      // Use a regex so `/vendor-portal` is not swallowed by `/vendor`.
+      '^/vendor(?:/|$)': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
     },
   },
 })

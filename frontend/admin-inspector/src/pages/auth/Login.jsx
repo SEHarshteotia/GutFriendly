@@ -44,11 +44,11 @@ export default function Login() {
 
     return (
 
-        <div className="min-h-screen flex">
+        <div className="staff-auth min-h-screen flex">
 
             {/* LEFT SIDE */}
 
-            <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-green-600 to-emerald-700 items-center justify-center">
+            <div className="staff-auth-visual hidden lg:flex w-1/2 items-center justify-center">
 
                 <div className="text-white text-center px-10">
 
@@ -80,9 +80,9 @@ export default function Login() {
 
             {/* RIGHT SIDE */}
 
-            <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-100">
+            <div className="staff-auth-form w-full lg:w-1/2 flex items-center justify-center">
 
-                <div className="bg-white shadow-xl rounded-xl w-[420px] p-10">
+                <div className="staff-auth-card bg-white w-[440px] p-10">
 
                     <div className="text-center mb-8">
 

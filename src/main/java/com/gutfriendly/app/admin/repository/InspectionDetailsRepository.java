@@ -23,6 +23,9 @@ public interface InspectionDetailsRepository extends JpaRepository<InspectionDet
 
 	Optional<InspectionDetails> findFirstByShop_ShopIdAndStatusInOrderByInspectionDateDesc(int shopId,
 			Collection<InspectionStatus> statuses);
+
+	Optional<InspectionDetails> findFirstByShop_ShopIdAndStatusInOrderByCompletedAtDescInspectionDateDesc(
+			int shopId, Collection<InspectionStatus> statuses);
 	
 	Page<InspectionDetails> findAllByOrderByInspectionDateDesc(Pageable pageable);
 	

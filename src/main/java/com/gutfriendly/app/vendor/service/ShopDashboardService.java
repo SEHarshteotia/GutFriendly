@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -88,7 +89,8 @@ public class ShopDashboardService {
 
 		VendorShopAddress address = shop.getAddress_id();
 		VendorStatus vendorStatus = ShopStatusMapper.toVendorStatus(shop);
-		boolean serviceableLocation = ShopStatusMapper.isServiceableStatus(vendorStatus);
+		boolean serviceableLocation =
+				shop.getServiceAvailabilityStatus() == ServiceAvailabilityStatus.SERVICEABLE;
 		List<String> pendingRequirements = getPendingRequirements(vendor, shop, address);
 
 		return new ShopDashboardResponseDTO(
@@ -105,6 +107,7 @@ public class ShopDashboardService {
 				serviceableLocation,
 				calculateProfileCompletion(vendor, address),
 				getNextAction(shop, address, serviceableLocation),
+				resolveAdminRemarks(shop),
 				pendingRequirements,
 				buildSummary(shop),
 				buildActiveOrders(shop),
@@ -334,7 +337,7 @@ public class ShopDashboardService {
 			pendingRequirements.add("Book an inspection for " + shop.getShopName());
 		}
 
-		if (status == VendorStatus.REJECTED || status == VendorStatus.SUSPENDED) {
+		if (status == VendorStatus.SUSPENDED) {
 			pendingRequirements.add("Contact support for shop review: " + shop.getShopName());
 		}
 
@@ -349,7 +352,7 @@ public class ShopDashboardService {
 		}
 
 		if (status == VendorStatus.REJECTED) {
-			return "Review rejection reason with support.";
+			return "Inspection rejected. Book a new inspection.";
 		}
 
 		if (address == null) {
@@ -383,10 +386,11 @@ public class ShopDashboardService {
 	}
 
 	private boolean requiresInspectionBooking(ShopDetails shop, VendorStatus vendorStatus) {
-		if (vendorStatus == VendorStatus.APPROVED
-				|| vendorStatus == VendorStatus.SUSPENDED
-				|| vendorStatus == VendorStatus.REJECTED) {
+		if (vendorStatus == VendorStatus.APPROVED || vendorStatus == VendorStatus.SUSPENDED) {
 			return false;
+		}
+		if (shop.getStatus() == ShopStatus.REJECTED) {
+			return shop.getAddress_id() != null && !hasActiveInspection(shop.getShopId());
 		}
 		if (shop.getStatus() == ShopStatus.VERIFIED || shop.getVerifiedAt() != null) {
 			return false;
@@ -429,6 +433,25 @@ public class ShopDashboardService {
 
 	private boolean hasText(String value) {
 		return value != null && !value.isBlank();
+	}
+
+	/**
+	 * Prefer shop-level remarks (set on reject/reinspection). Fall back to the latest
+	 * rejected or closed-for-reinspection inspection so older data still surfaces.
+	 */
+	private String resolveAdminRemarks(ShopDetails shop) {
+		if (hasText(shop.getAdminRemarks())) {
+			return shop.getAdminRemarks().trim();
+		}
+
+		return inspectionRepository
+				.findFirstByShop_ShopIdAndStatusInOrderByCompletedAtDescInspectionDateDesc(
+						shop.getShopId(),
+						EnumSet.of(InspectionStatus.REJECTED, InspectionStatus.CLOSED_FOR_REINSPECTION))
+				.map(InspectionDetails::getAdminRemarks)
+				.filter(this::hasText)
+				.map(String::trim)
+				.orElse(null);
 	}
 
 	private double percentChange(long current, long previous) {

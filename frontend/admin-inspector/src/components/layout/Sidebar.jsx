@@ -37,7 +37,7 @@ export default function Sidebar() {
         {
             name:"Reviews",
             icon:<FaAward/>,
-            path:"#"
+            path:"/admin/reviews"
         },
         {
             name:"Profile",
@@ -53,7 +53,7 @@ export default function Sidebar() {
 
     return (
 
-        <div className="w-72 h-screen bg-white text-slate-600 flex flex-col border-r border-gray-200">
+        <aside className="portal-sidebar w-72 h-screen flex flex-col">
 
             {/* Brand */}
             <div className="border-b border-gray-100 px-7 py-7">
@@ -128,7 +128,7 @@ export default function Sidebar() {
                 </div>
             </div>
 
-        </div>
+        </aside>
 
     )
 

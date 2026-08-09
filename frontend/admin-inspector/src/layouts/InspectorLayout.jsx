@@ -7,7 +7,7 @@ export default function InspectorLayout() {
 
     return (
 
-        <div className="flex h-screen bg-gray-100">
+        <div className="gf-shell flex h-screen">
 
             <InspectorSidebar />
 
@@ -15,7 +15,7 @@ export default function InspectorLayout() {
 
                 <InspectorNavbar />
 
-                <main className="flex-1 overflow-auto p-6">
+                <main className="gf-main flex-1 overflow-auto p-8">
 
                     <Outlet />
 

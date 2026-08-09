@@ -14,14 +14,16 @@ public final class ShopStatusMapper {
 		if (Boolean.TRUE.equals(shop.getBlocked())) {
 			return VendorStatus.SUSPENDED;
 		}
-		if (shop.getServiceAvailabilityStatus() == ServiceAvailabilityStatus.NOT_SERVICEABLE) {
-			return VendorStatus.NOT_SERVICEABLE;
-		}
+		// Rejection must win over serviceability — reject keeps the pincode serviceable
+		// so the vendor can book a new inspection.
 		if (shop.getStatus() == ShopStatus.REJECTED) {
 			return VendorStatus.REJECTED;
 		}
 		if (shop.getStatus() == ShopStatus.VERIFIED) {
 			return VendorStatus.APPROVED;
+		}
+		if (shop.getServiceAvailabilityStatus() == ServiceAvailabilityStatus.NOT_SERVICEABLE) {
+			return VendorStatus.NOT_SERVICEABLE;
 		}
 		if (shop.getServiceAvailabilityStatus() == ServiceAvailabilityStatus.SERVICEABLE) {
 			return VendorStatus.UNDER_REVIEW;

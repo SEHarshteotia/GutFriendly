@@ -43,7 +43,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="vendor-auth flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 flex justify-center">
           <GutFriendlyLogo
@@ -57,7 +57,7 @@ export function LoginPage() {
         <p className="mb-6 text-center text-sm text-gray-500">Sign in to your account</p>
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
+          className="vendor-auth-card rounded-2xl border bg-white p-8"
         >
           {registered && (
             <Alert variant="success" message="Account created! Sign in with your phone and password." className="mb-4" />

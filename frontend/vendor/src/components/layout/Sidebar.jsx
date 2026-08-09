@@ -36,23 +36,22 @@ export function Sidebar({ onAddShop }) {
   })
 
   return (
-    <aside className="flex w-64 flex-col bg-sidebar text-white">
-      <div className="border-b border-white/10 px-5 py-5">
+    <aside className="portal-sidebar flex w-72 flex-col">
+      <div className="portal-brand px-6 py-6">
         <GutFriendlyLogo
           size="md"
-          theme="dark"
           subtitle="Vendor Portal"
         />
       </div>
 
-      <nav className="flex-1 space-y-1 px-3 py-4">
+      <nav className="portal-nav flex-1 space-y-1 px-4 py-5">
         {navItems.map(({ to, label, icon: Icon, badge }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                isActive ? 'bg-brand-600 text-white' : 'text-gray-300 hover:bg-sidebar-hover hover:text-white'
+              `portal-nav-link flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium transition-colors ${
+                isActive ? 'is-active' : ''
               }`
             }
           >
@@ -67,7 +66,7 @@ export function Sidebar({ onAddShop }) {
         ))}
       </nav>
 
-      <div className="border-t border-white/10 p-4">
+      <div className="portal-shop border-t p-4">
         {shops.length > 0 ? (
           <>
             <label className="text-xs font-medium uppercase tracking-wide text-gray-400">
@@ -76,7 +75,7 @@ export function Sidebar({ onAddShop }) {
             <select
               value={selectedShopId ?? ''}
               onChange={(e) => selectShop(Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-white/20 bg-sidebar-hover px-3 py-2 text-sm text-white"
+              className="mt-1 w-full rounded-xl border px-3 py-2.5 text-sm"
             >
               {shops.map((shop) => (
                 <option key={shop.shopId} value={shop.shopId}>
@@ -91,7 +90,7 @@ export function Sidebar({ onAddShop }) {
         <button
           type="button"
           onClick={onAddShop}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-white/25 px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-brand-500 hover:bg-sidebar-hover hover:text-white"
+          className="portal-add mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed px-3 py-2.5 text-sm font-semibold transition-colors"
         >
           <Plus className="h-4 w-4" />
           Add new store
@@ -100,7 +99,7 @@ export function Sidebar({ onAddShop }) {
 
       <button
         onClick={logout}
-        className="flex items-center gap-2 border-t border-white/10 px-5 py-4 text-sm text-gray-400 hover:text-white"
+        className="portal-logout flex items-center gap-2 border-t px-6 py-5 text-sm font-medium"
       >
         <LogOut className="h-4 w-4" />
         Log out

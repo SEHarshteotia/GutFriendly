@@ -20,7 +20,10 @@ function canBookInspection(dashboard) {
     return false
   }
 
-  if (dashboard.nextAction === 'Book inspection.') {
+  if (
+    dashboard.nextAction === 'Book inspection.' ||
+    dashboard.nextAction?.includes('Book a new inspection')
+  ) {
     return true
   }
 
@@ -99,6 +102,10 @@ export function DashboardPage() {
     )
   }
 
+  const rejectionReason =
+    dashboard.rejectionReason?.trim() ||
+    dashboard.adminRemarks?.trim() ||
+    ''
   const { summary } = dashboard
   const pendingRequirements =
     dashboard.status === 'APPROVED'
@@ -125,14 +132,24 @@ export function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-900">
           {greeting()}, {dashboard.shopName}!
         </h1>
-        {pendingRequirements.length > 0 && (
+        {(pendingRequirements.length > 0 || rejectionReason) && (
           <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-4">
             <p className="text-sm font-medium text-amber-800">{dashboard.nextAction}</p>
-            <ul className="mt-2 list-inside list-disc text-sm text-amber-700">
-              {pendingRequirements.map((req) => (
-                <li key={req}>{req}</li>
-              ))}
-            </ul>
+            {rejectionReason && (
+              <p className="mt-2 text-sm text-amber-900">
+                <span className="font-semibold">
+                  {dashboard.status === 'REJECTED' ? 'Rejection reason: ' : 'Admin remarks: '}
+                </span>
+                {rejectionReason}
+              </p>
+            )}
+            {pendingRequirements.length > 0 && (
+              <ul className="mt-2 list-inside list-disc text-sm text-amber-700">
+                {pendingRequirements.map((req) => (
+                  <li key={req}>{req}</li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
       </div>
@@ -174,6 +191,17 @@ export function DashboardPage() {
               <h2 className="font-semibold text-gray-900">Food safety inspection</h2>
               <p className="mt-1 text-sm text-gray-600">{dashboard.nextAction}</p>
 
+              {rejectionReason && (
+                <div className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-rose-700">
+                    {dashboard.status === 'REJECTED'
+                      ? 'Rejection reason'
+                      : 'Admin remarks'}
+                  </p>
+                  <p className="mt-1 text-sm text-rose-800">{rejectionReason}</p>
+                </div>
+              )}
+
               {showInspectionBooking && (
                 <div className="mt-4 flex flex-wrap items-end gap-3">
                   <div>
@@ -214,7 +242,11 @@ export function DashboardPage() {
                     disabled={!canSubmitInspection || bookInspectionMutation.isPending}
                     className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
                   >
-                    {bookInspectionMutation.isPending ? 'Booking…' : 'Book inspection'}
+                    {bookInspectionMutation.isPending
+                      ? 'Booking…'
+                      : dashboard.status === 'REJECTED'
+                        ? 'Book reinspection'
+                        : 'Book inspection'}
                   </button>
                 </div>
               )}

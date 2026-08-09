@@ -1,9 +1,7 @@
 const BASE =
   import.meta.env.VITE_API_BASE_URL
     ? `${import.meta.env.VITE_API_BASE_URL}/vendor`
-    : import.meta.env.DEV
-      ? '/vendor'
-      : 'http://localhost:8080/vendor'
+    : '/vendor'
 
 export class ApiError extends Error {
   constructor(message, status, title) {

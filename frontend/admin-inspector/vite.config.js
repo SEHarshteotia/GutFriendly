@@ -22,6 +22,8 @@ function springBootProxy() {
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/staff-portal/',
+  
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

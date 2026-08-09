@@ -9,6 +9,13 @@ import {
 
 import { Link, useParams } from "react-router-dom";
 
+import {
+  ADMIN_LOGIN_URL,
+  INSPECTOR_LOGIN_URL,
+  VENDOR_LOGIN_URL,
+  VENDOR_REGISTER_URL,
+} from "../utils/constants";
+
 const portalInformation = {
   vendor: {
     name: "Vendor",
@@ -17,9 +24,9 @@ const portalInformation = {
     description:
       "Register your food business, manage your shop, menu and customer orders.",
     loginText: "Vendor login",
-    loginPath: "/vendor/login",
+    loginPath: VENDOR_LOGIN_URL,
     registerText: "Register business",
-    registerPath: "/vendor/register",
+    registerPath: VENDOR_REGISTER_URL,
     registrationAvailable: true,
   },
 
@@ -30,7 +37,7 @@ const portalInformation = {
     description:
       "View assigned establishments, complete hygiene inspections and submit reports.",
     loginText: "Inspector login",
-    loginPath: "/inspector/login",
+    loginPath: INSPECTOR_LOGIN_URL,
     registrationAvailable: false,
   },
 
@@ -41,7 +48,7 @@ const portalInformation = {
     description:
       "Manage vendors, inspector assignments, certifications and platform operations.",
     loginText: "Admin login",
-    loginPath: "/admin/login",
+    loginPath: ADMIN_LOGIN_URL,
     registrationAvailable: false,
   },
 };
@@ -91,22 +98,22 @@ function RolePortalPage() {
         </p>
 
         <div className="role-portal-actions">
-          <Link
-            to={portal.loginPath}
+          <a
+            href={portal.loginPath}
             className="primary-button"
           >
             <UserRound size={19} />
             {portal.loginText}
-          </Link>
+          </a>
 
           {portal.registrationAvailable && (
-            <Link
-              to={portal.registerPath}
+            <a
+              href={portal.registerPath}
               className="secondary-button"
             >
               <Building2 size={19} />
               {portal.registerText}
-            </Link>
+            </a>
           )}
         </div>
 

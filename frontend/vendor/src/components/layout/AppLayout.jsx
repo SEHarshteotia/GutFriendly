@@ -10,9 +10,9 @@ export function AppLayout() {
   const [addShopOpen, setAddShopOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="gf-shell flex min-h-screen">
       <Sidebar onAddShop={() => setAddShopOpen(true)} />
-      <main className="flex-1 overflow-auto">
+      <main className="gf-main flex-1 overflow-auto">
         <Outlet />
       </main>
       <CreateShopModal

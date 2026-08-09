@@ -1,0 +1,16 @@
+{
+  "name": "gutfriendly-unified-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "install:all": "npm install --prefix userside && npm install --prefix vendor && npm install --prefix admin-inspector && npm install",
+    "dev": "node scripts/dev-server.js",
+    "build": "npm run build --prefix userside && npm run build --prefix vendor && npm run build --prefix admin-inspector && node scripts/assemble.js",
+    "start": "node server.js",
+    "preview": "node server.js"
+  },
+  "devDependencies": {
+    "vite": "^7.1.7"
+  }
+}
