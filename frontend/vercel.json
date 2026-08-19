@@ -1,0 +1,32 @@
+{
+  "buildCommand": "echo 'serving prebuilt dist'",
+  "outputDirectory": "dist",
+  "framework": null,
+  "rewrites": [
+    { "source": "/users", "destination": "https://gutfriendly.onrender.com/users" },
+    { "source": "/users/:path*", "destination": "https://gutfriendly.onrender.com/users/:path*" },
+    { "source": "/home", "destination": "https://gutfriendly.onrender.com/home" },
+    { "source": "/home/:path*", "destination": "https://gutfriendly.onrender.com/home/:path*" },
+    { "source": "/shops", "destination": "https://gutfriendly.onrender.com/shops" },
+    { "source": "/shops/:path*", "destination": "https://gutfriendly.onrender.com/shops/:path*" },
+    { "source": "/foods", "destination": "https://gutfriendly.onrender.com/foods" },
+    { "source": "/foods/:path*", "destination": "https://gutfriendly.onrender.com/foods/:path*" },
+    { "source": "/cart", "destination": "https://gutfriendly.onrender.com/cart" },
+    { "source": "/cart/:path*", "destination": "https://gutfriendly.onrender.com/cart/:path*" },
+    { "source": "/wishlist", "destination": "https://gutfriendly.onrender.com/wishlist" },
+    { "source": "/wishlist/:path*", "destination": "https://gutfriendly.onrender.com/wishlist/:path*" },
+    { "source": "/orders", "destination": "https://gutfriendly.onrender.com/orders" },
+    { "source": "/orders/:path*", "destination": "https://gutfriendly.onrender.com/orders/:path*" },
+    { "source": "/reviews", "destination": "https://gutfriendly.onrender.com/reviews" },
+    { "source": "/reviews/:path*", "destination": "https://gutfriendly.onrender.com/reviews/:path*" },
+    { "source": "/vendor", "destination": "https://gutfriendly.onrender.com/vendor" },
+    { "source": "/vendor/:path*", "destination": "https://gutfriendly.onrender.com/vendor/:path*" },
+    { "source": "/admin", "destination": "https://gutfriendly.onrender.com/admin" },
+    { "source": "/admin/:path*", "destination": "https://gutfriendly.onrender.com/admin/:path*" },
+    { "source": "/inspector", "destination": "https://gutfriendly.onrender.com/inspector" },
+    { "source": "/inspector/:path*", "destination": "https://gutfriendly.onrender.com/inspector/:path*" },
+    { "source": "/vendor-portal/:path*", "destination": "/vendor-portal/index.html" },
+    { "source": "/staff-portal/:path*", "destination": "/staff-portal/index.html" },
+    { "source": "/:path*", "destination": "/index.html" }
+  ]
+}

@@ -1,0 +1,13 @@
+frontend
+docs
+scripts
+target
+.git
+.mvn
+.settings
+.classpath
+.factorypath
+.project
+*.md
+mvnw
+mvnw.cmd
