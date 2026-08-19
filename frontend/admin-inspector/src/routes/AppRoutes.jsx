@@ -15,6 +15,8 @@ import AssignedInspections from "../pages/inspector/AssignedInspections";
 import InspectionForm from "../pages/inspector/InspectionForm";
 import InspectionHistory from "../pages/inspector/InspectionHistory";
 import Reviews from "../pages/admin/Reviews";
+import Profile from "../pages/admin/Profile";
+import Settings from "../pages/admin/Settings";
 
 import NotFound from "../pages/common/NotFound";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -62,6 +64,16 @@ export default function AppRoutes() {
                                 <Route
                                     path="reviews"
                                     element={<Reviews />}
+                                />
+
+                                <Route
+                                    path="profile"
+                                    element={<Profile />}
+                                />
+
+                                <Route
+                                    path="settings"
+                                    element={<Settings />}
                                 />
                 
                           

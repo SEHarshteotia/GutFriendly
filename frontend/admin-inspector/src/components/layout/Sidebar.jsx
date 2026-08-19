@@ -42,12 +42,12 @@ export default function Sidebar() {
         {
             name:"Profile",
             icon:<FaStar/>,
-            path:"#"
+            path:"/admin/profile"
         },
         {
             name:"Settings",
             icon:<FaCog/>,
-            path:"#"
+            path:"/admin/settings"
         }
     ];
 
