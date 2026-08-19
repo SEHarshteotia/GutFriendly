@@ -3,7 +3,19 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import GutFriendlyLogo from "@shared/GutFriendlyLogo";
+import PasswordStrengthMeter from "@shared/PasswordStrengthMeter";
+import {
+  evaluatePassword,
+  validateEmail,
+  validateIndianPhone,
+} from "@shared/validation";
 import { registerUser } from "../services/authService";
+
+const FIELD_ERROR_STYLE = {
+  margin: "6px 0 0",
+  fontSize: "12px",
+  color: "#dc2626",
+};
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -19,6 +31,22 @@ function RegisterPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [touched, setTouched] = useState({});
+
+  const passwordCheck = evaluatePassword(formData.password);
+  const phoneCheck = validateIndianPhone(formData.phoneNo);
+  const emailCheck = validateEmail(formData.email);
+
+  const canSubmit =
+    passwordCheck.isAcceptable &&
+    phoneCheck.isValid &&
+    emailCheck.isValid;
+
+  function handleBlur(event) {
+    const { name } = event.target;
+
+    setTouched((previous) => ({ ...previous, [name]: true }));
+  }
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -34,10 +62,30 @@ function RegisterPage() {
 
     setMessage("");
     setError("");
+
+    setTouched({ phoneNo: true, email: true, password: true });
+
+    if (!phoneCheck.isValid) {
+      setError(phoneCheck.message);
+      return;
+    }
+
+    if (!emailCheck.isValid) {
+      setError(emailCheck.message);
+      return;
+    }
+
+    if (!passwordCheck.isAcceptable) {
+      setError(passwordCheck.message);
+      return;
+    }
+
     setLoading(true);
 
     const registrationData = {
       ...formData,
+      phoneNo: phoneCheck.value,
+      email: emailCheck.value,
       joining_date: new Date()
         .toISOString()
         .slice(0, 19),
@@ -167,9 +215,17 @@ function RegisterPage() {
                 type="tel"
                 value={formData.phoneNo}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="9876501234"
+                inputMode="numeric"
+                autoComplete="tel"
+                maxLength={14}
                 required
               />
+
+              {touched.phoneNo && !phoneCheck.isValid && (
+                <p style={FIELD_ERROR_STYLE}>{phoneCheck.message}</p>
+              )}
             </div>
 
             <div className="form-group">
@@ -183,9 +239,15 @@ function RegisterPage() {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="you@example.com"
+                autoComplete="email"
                 required
               />
+
+              {touched.email && !emailCheck.isValid && (
+                <p style={FIELD_ERROR_STYLE}>{emailCheck.message}</p>
+              )}
             </div>
 
             <div className="form-group">
@@ -199,15 +261,19 @@ function RegisterPage() {
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Create a password"
+                autoComplete="new-password"
                 required
               />
+
+              <PasswordStrengthMeter evaluation={passwordCheck} />
             </div>
 
             <button
               className="auth-submit-button"
               type="submit"
-              disabled={loading}
+              disabled={loading || !canSubmit}
             >
               {loading
                 ? "Creating account..."

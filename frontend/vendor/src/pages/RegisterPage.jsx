@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import GutFriendlyLogo from '@shared/GutFriendlyLogo'
+import PasswordStrengthMeter from '@shared/PasswordStrengthMeter'
+import { evaluatePassword, validateEmail, validateIndianPhone } from '@shared/validation'
 import { vendorApi } from '../api/vendorApi'
 import { Alert } from '../components/Alert'
 import { USER_LANDING_URL } from '../utils/constants'
@@ -19,6 +21,25 @@ export function RegisterPage() {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [touched, setTouched] = useState({})
+
+  const passwordCheck = evaluatePassword(form.password)
+  const phoneCheck = validateIndianPhone(form.phoneNo)
+  // Email is optional on the vendor form, so an empty value stays valid.
+  const emailCheck = validateEmail(form.email, { required: false })
+
+  const canSubmit =
+    form.fName.trim() !== '' &&
+    form.lName.trim() !== '' &&
+    phoneCheck.isValid &&
+    emailCheck.isValid &&
+    passwordCheck.isAcceptable
+
+  function markTouched(field) {
+    setTouched((prev) => ({ ...prev, [field]: true }))
+  }
+
+  const fieldErrorClass = 'mt-1 text-xs text-red-600'
 
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -32,22 +53,28 @@ export function RegisterPage() {
       setError('First and last name are required.')
       return
     }
-    if (!form.phoneNo.trim()) {
-      setError('Phone number is required.')
+    setTouched({ phoneNo: true, email: true, password: true })
+
+    if (!phoneCheck.isValid) {
+      setError(phoneCheck.message)
       return
     }
-    if (!form.password) {
-      setError('Password is required.')
+    if (!emailCheck.isValid) {
+      setError(emailCheck.message)
       return
     }
-    if (form.password.length < 6) {
-      setError('Password must be at least 6 characters.')
+    if (!passwordCheck.isAcceptable) {
+      setError(passwordCheck.message)
       return
     }
 
     setLoading(true)
     try {
-      await vendorApi.register(form)
+      await vendorApi.register({
+        ...form,
+        phoneNo: phoneCheck.value,
+        email: emailCheck.value,
+      })
       navigate('/login', { state: { registered: true } })
     } catch (err) {
       setError(getErrorMessage(err, 'register'))
@@ -99,9 +126,16 @@ export function RegisterPage() {
                 type="tel"
                 value={form.phoneNo}
                 onChange={(e) => update('phoneNo', e.target.value)}
-                placeholder="9876543210"
+                onBlur={() => markTouched('phoneNo')}
+                placeholder="9876501234"
+                inputMode="numeric"
+                autoComplete="tel"
+                maxLength={14}
                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
               />
+              {touched.phoneNo && !phoneCheck.isValid && (
+                <p className={fieldErrorClass}>{phoneCheck.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Email (optional)</label>
@@ -109,8 +143,14 @@ export function RegisterPage() {
                 type="email"
                 value={form.email}
                 onChange={(e) => update('email', e.target.value)}
+                onBlur={() => markTouched('email')}
+                placeholder="you@example.com"
+                autoComplete="email"
                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
               />
+              {touched.email && !emailCheck.isValid && (
+                <p className={fieldErrorClass}>{emailCheck.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Aadhaar number (optional)</label>
@@ -136,13 +176,16 @@ export function RegisterPage() {
                 type="password"
                 value={form.password}
                 onChange={(e) => update('password', e.target.value)}
+                onBlur={() => markTouched('password')}
+                autoComplete="new-password"
                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
               />
+              <PasswordStrengthMeter evaluation={passwordCheck} />
             </div>
           </div>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !canSubmit}
             className="mt-6 w-full rounded-lg bg-brand-600 py-2.5 font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
             {loading ? 'Creating…' : 'Register'}

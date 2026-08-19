@@ -30,6 +30,7 @@ export default function Login() {
                     })
                 );
                 localStorage.removeItem("inspectorId");
+                localStorage.removeItem("inspector");
                 navigate("/admin/dashboard");
                 return;
             }
@@ -41,6 +42,15 @@ export default function Login() {
             localStorage.setItem(
                 "inspectorId",
                 String(response.inspectorId)
+            );
+            localStorage.setItem(
+                "inspector",
+                JSON.stringify({
+                    inspectorId: response?.inspectorId ?? null,
+                    firstName: response?.firstName ?? "",
+                    lastName: response?.lastName ?? "",
+                    email: response?.email ?? email
+                })
             );
             navigate("/inspector/dashboard");
         } catch (err) {

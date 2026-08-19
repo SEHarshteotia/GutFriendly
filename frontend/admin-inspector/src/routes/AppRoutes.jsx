@@ -14,6 +14,7 @@ import InspectorDashboard from "../pages/inspector/InspectorDashboard";
 import AssignedInspections from "../pages/inspector/AssignedInspections";
 import InspectionForm from "../pages/inspector/InspectionForm";
 import InspectionHistory from "../pages/inspector/InspectionHistory";
+import InspectorProfile from "../pages/inspector/InspectorProfile";
 import Reviews from "../pages/admin/Reviews";
 import Profile from "../pages/admin/Profile";
 import Settings from "../pages/admin/Settings";
@@ -106,6 +107,11 @@ export default function AppRoutes() {
                 <Route
                     path="history"
                     element={<InspectionHistory />}
+                />
+
+                <Route
+                    path="profile"
+                    element={<InspectorProfile />}
                 />
 
             </Route>

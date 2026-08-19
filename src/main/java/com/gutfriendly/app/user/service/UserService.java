@@ -11,6 +11,7 @@ import com.gutfriendly.app.user.dto.UserLoginDTO;
 import com.gutfriendly.app.user.exception.BadRequestException;
 import com.gutfriendly.app.user.exception.ConflictException;
 import com.gutfriendly.app.user.exception.ResourceNotFoundException;
+import com.gutfriendly.app.common.validation.RegistrationValidator;
 import com.gutfriendly.app.admin.model.Pincode;
 import com.gutfriendly.app.admin.repository.PincodeRepository;
 import com.gutfriendly.app.user.model.UserAddress;
@@ -37,6 +38,24 @@ public class UserService {
             throw new BadRequestException(
                     "User details are required"
             );
+        }
+
+        // The signup form runs these same rules, but anything posting
+        // directly to the API would otherwise skip them entirely.
+        try {
+            user.setPhoneNo(
+                    RegistrationValidator.validateIndianMobile(
+                            user.getPhoneNo()
+                    )
+            );
+            user.setEmail(
+                    RegistrationValidator.validateEmail(
+                            user.getEmail(), true
+                    )
+            );
+            RegistrationValidator.validatePassword(user.getPassword());
+        } catch (RegistrationValidator.ValidationException ex) {
+            throw new BadRequestException(ex.getMessage());
         }
 
         repo.save(user);

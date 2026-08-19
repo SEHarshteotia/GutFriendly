@@ -33,7 +33,7 @@ export default function InspectorSidebar() {
         {
             name: "Profile",
             icon: <FaUser />,
-            path: "#"
+            path: "/inspector/profile"
         }
 
     ];

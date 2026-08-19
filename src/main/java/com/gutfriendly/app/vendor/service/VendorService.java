@@ -13,6 +13,7 @@ import com.gutfriendly.app.vendor.dto.VendorLoginResponseDTO;
 import com.gutfriendly.app.vendor.dto.VendorProfileDTO;
 import com.gutfriendly.app.vendor.dto.VendorRegisterRequestDTO;
 import com.gutfriendly.app.vendor.dto.VendorRegisterResponseDTO;
+import com.gutfriendly.app.common.validation.RegistrationValidator;
 import com.gutfriendly.app.vendor.util.PhoneNumberUtil;
 
 @Service
@@ -67,6 +68,15 @@ public class VendorService {
 		}
 		if (isBlank(request.getPassword())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is required");
+		}
+
+		// Mirrors the browser checks so direct API calls cannot skip them.
+		try {
+			RegistrationValidator.validateIndianMobile(request.getPhoneNo());
+			RegistrationValidator.validateEmail(request.getEmail(), false);
+			RegistrationValidator.validatePassword(request.getPassword());
+		} catch (RegistrationValidator.ValidationException ex) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
 
