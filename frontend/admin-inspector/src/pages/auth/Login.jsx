@@ -17,9 +17,18 @@ export default function Login() {
 
         try {
             if (email === "admin@gutfriendly.com") {
-                await adminLogin(email, password);
+                const adminResponse = await adminLogin(email, password);
 
                 localStorage.setItem("role", "ADMIN");
+                localStorage.setItem(
+                    "admin",
+                    JSON.stringify({
+                        adminId: adminResponse?.adminId ?? null,
+                        firstName: adminResponse?.firstName ?? "",
+                        lastName: adminResponse?.lastName ?? "",
+                        email: adminResponse?.email ?? email
+                    })
+                );
                 localStorage.removeItem("inspectorId");
                 navigate("/admin/dashboard");
                 return;
@@ -28,6 +37,7 @@ export default function Login() {
             const response = await inspectorLogin(email, password);
 
             localStorage.setItem("role", "INSPECTOR");
+            localStorage.removeItem("admin");
             localStorage.setItem(
                 "inspectorId",
                 String(response.inspectorId)
