@@ -1,3 +1,5 @@
+import { authHeader, handleUnauthorized } from "./session";
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -11,6 +13,7 @@ export async function apiRequest(
       ...options,
       headers: {
         "Content-Type": "application/json",
+        ...authHeader(),
         ...options.headers,
       },
     }
@@ -26,6 +29,12 @@ export async function apiRequest(
     : await response.text();
 
   if (!response.ok) {
+    if (response.status === 401) {
+      // The token is missing, expired or tampered with: there is nothing this
+      // page can do except send the visitor back to the login screen.
+      handleUnauthorized();
+    }
+
     let message = "Something went wrong";
 
     if (typeof data === "object" && data !== null) {

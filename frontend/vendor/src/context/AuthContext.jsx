@@ -6,6 +6,8 @@ import {
   useState,
 } from 'react'
 
+import { clearVendorToken } from '../api/session'
+
 const STORAGE_KEY = 'gutfriendly_vendor_auth'
 
 const AuthContext = createContext(null)
@@ -41,6 +43,7 @@ export function AuthProvider({ children }) {
   )
 
   const logout = useCallback(() => {
+    clearVendorToken()
     localStorage.removeItem(STORAGE_KEY)
     setState({ vendor: null, shops: [], selectedShopId: null })
   }, [])

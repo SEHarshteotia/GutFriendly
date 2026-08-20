@@ -14,6 +14,8 @@ import com.gutfriendly.app.admin.dto.response.ResponseDto;
 import com.gutfriendly.app.admin.model.AdminDetails;
 import com.gutfriendly.app.admin.service.AdminAuthService;
 import com.gutfriendly.app.admin.service.AdminService;
+import com.gutfriendly.app.security.AuthRole;
+import com.gutfriendly.app.security.AuthTokenService;
 
 @RestController
 @RequestMapping("/admin")
@@ -23,9 +25,12 @@ public class Admin {
 
 	final AdminAuthService adminAuthService;
 
-	Admin(AdminService as, AdminAuthService adminAuthService) {
+	final AuthTokenService authTokenService;
+
+	Admin(AdminService as, AdminAuthService adminAuthService, AuthTokenService authTokenService) {
 		this.as = as;
 		this.adminAuthService = adminAuthService;
+		this.authTokenService = authTokenService;
 	}
 
 	@PostMapping("/registration")
@@ -43,6 +48,7 @@ public class Admin {
 		return ResponseEntity.ok(
 				Map.of(
 						"message", "Login successfully",
+						"token", authTokenService.issue(AuthRole.ADMIN, admin.getId()),
 						"status", "Success",
 						"adminId", admin.getId(),
 						"firstName", admin.getFirstName(),

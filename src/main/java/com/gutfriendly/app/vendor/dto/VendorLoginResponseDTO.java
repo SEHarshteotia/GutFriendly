@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class VendorLoginResponseDTO {
 
 	private String message;
+	private String token;
 	private VendorProfileDTO vendor;
 	private List<ShopDTO> shops;
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { clearStaffSession } from "../../services/session";
 
 /**
  * Admin settings.
@@ -23,9 +24,8 @@ const Settings = () => {
     }, []);
 
     const handleSignOut = () => {
-        localStorage.removeItem("role");
-        localStorage.removeItem("admin");
-        localStorage.removeItem("inspectorId");
+        // Drops the token as well, so the session really ends here.
+        clearStaffSession();
         navigate("/login");
     };
 

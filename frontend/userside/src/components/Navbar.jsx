@@ -26,6 +26,8 @@ import {
 } from "react-router-dom";
 
 import GutFriendlyLogo from "@shared/GutFriendlyLogo";
+
+import { clearSession } from "../services/session";
 import {
   ADMIN_LOGIN_URL,
   INSPECTOR_LOGIN_URL,
@@ -106,9 +108,9 @@ function Navbar() {
   }, []);
 
   function handleLogout() {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("rewardPoints");
+    // clearSession also drops the login token, otherwise the next visitor on
+    // this browser would inherit a working session.
+    clearSession();
 
     setIsLoggedIn(false);
     setShowProfileMenu(false);

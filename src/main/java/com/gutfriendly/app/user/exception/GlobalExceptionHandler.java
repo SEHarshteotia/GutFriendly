@@ -243,6 +243,27 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // A URL that matches no controller is a 404, not a server fault. Without
+    // this it falls through to the catch-all below and reports 500.
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResource(
+            org.springframework.web.servlet.resource.NoResourceFoundException exception,
+            HttpServletRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                "That endpoint does not exist.",
+                request.getRequestURI()
+        );
+
+        return new ResponseEntity<>(
+                errorResponse,
+                HttpStatus.NOT_FOUND
+        );
+    }
+
     // Handles unexpected errors without exposing the stack trace.
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(

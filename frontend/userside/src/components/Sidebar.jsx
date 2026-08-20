@@ -11,6 +11,8 @@ import {
 
 import { useState } from "react";
 
+import { clearSession } from "../services/session";
+
 import {
   NavLink,
   useNavigate,
@@ -30,9 +32,9 @@ function Sidebar() {
     localStorage.getItem("rewardPoints") || 0;
 
   function handleLogout() {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("rewardPoints");
+    // clearSession also drops the login token, otherwise the next visitor on
+    // this browser would inherit a working session.
+    clearSession();
 
     setShowLogoutModal(false);
 

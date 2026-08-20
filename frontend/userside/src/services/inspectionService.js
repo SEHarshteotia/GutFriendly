@@ -1,4 +1,5 @@
-import axios from "axios";
+// Uses the shared instance so every call carries the login token.
+import axios from "./adminApi";
 
 
 const API_URL = `${import.meta.env.VITE_API_BASE_URL ?? ""}/admin/inspections`;

@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { clearStaffSession } from "../../services/session";
 
 /*
  * Shows the inspector account that is currently signed in.
@@ -54,9 +55,8 @@ export default function InspectorProfile() {
         : "IN";
 
     function handleSignOut() {
-        localStorage.removeItem("role");
-        localStorage.removeItem("inspector");
-        localStorage.removeItem("inspectorId");
+        // Drops the token as well, so the session really ends here.
+        clearStaffSession();
         navigate("/login");
     }
 

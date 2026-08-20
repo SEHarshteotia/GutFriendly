@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gutfriendly.app.security.AuthRole;
+import com.gutfriendly.app.security.AuthTokenService;
 import com.gutfriendly.app.user.dto.ProfileResponseDTO;
 import com.gutfriendly.app.user.dto.UpdateProfileDTO;
 import com.gutfriendly.app.user.dto.UserLoginDTO;
@@ -27,6 +29,9 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private AuthTokenService authTokenService;
 
     // Registers a new user.
     @PostMapping("/register")
@@ -51,6 +56,7 @@ public class UserController {
         return ResponseEntity.ok(
                 Map.of(
                         "message", "Login Successful",
+                        "token", authTokenService.issue(AuthRole.USER, user.getUser_id()),
                         "userId", user.getUser_id(),
                         "fname", user.getFname(),
                         "rewardPoints", user.getRewardPoints()

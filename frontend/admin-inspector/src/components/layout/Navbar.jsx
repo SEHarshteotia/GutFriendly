@@ -1,5 +1,6 @@
 import { FaBell, FaSearch, FaQuestionCircle, FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { clearStaffSession } from "../../services/session";
 
 export default function Navbar({ onMenuClick }) {
 
@@ -7,7 +8,8 @@ export default function Navbar({ onMenuClick }) {
 
     const handleLogout = () => {
 
-        localStorage.removeItem("role");
+        // Drops the token as well, so the session really ends here.
+        clearStaffSession();
 
         navigate("/login");
 

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import GutFriendlyLogo from "@shared/GutFriendlyLogo";
 import { loginUser } from "../services/authService";
+import { saveSession } from "../services/session";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -34,20 +35,14 @@ function LoginPage() {
     try {
       const response = await loginUser(formData);
 
-      localStorage.setItem(
-        "userId",
-        String(response.userId)
-      );
-
-      localStorage.setItem(
-        "userName",
-        response.fname
-      );
-
-      localStorage.setItem(
-        "rewardPoints",
-        String(response.rewardPoints)
-      );
+      // The token is what every protected call is authorised with, so it has
+      // to be stored before the first navigation away from this page.
+      saveSession({
+        token: response.token,
+        userId: response.userId,
+        fname: response.fname,
+        rewardPoints: response.rewardPoints,
+      });
 
       navigate("/home");
     } catch (requestError) {

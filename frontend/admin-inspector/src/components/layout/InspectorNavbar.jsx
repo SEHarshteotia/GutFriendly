@@ -1,13 +1,14 @@
 import { FaBell, FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { clearStaffSession } from "../../services/session";
 
 export default function InspectorNavbar({ onMenuClick }) {
 
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem("role");
-        localStorage.removeItem("inspectorId");
+        // Drops the token as well, so the session really ends here.
+        clearStaffSession();
         navigate("/login");
     };
 

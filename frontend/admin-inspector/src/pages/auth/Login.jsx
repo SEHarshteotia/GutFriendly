@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GutFriendlyLogo from "@shared/GutFriendlyLogo";
 import { adminLogin, inspectorLogin } from "../../services/authService";
+import { saveStaffSession } from "../../services/session";
 import { USER_LANDING_URL } from "../../utils/constants";
 
 export default function Login() {
@@ -19,7 +20,7 @@ export default function Login() {
             if (email === "admin@gutfriendly.com") {
                 const adminResponse = await adminLogin(email, password);
 
-                localStorage.setItem("role", "ADMIN");
+                saveStaffSession("ADMIN", adminResponse?.token);
                 localStorage.setItem(
                     "admin",
                     JSON.stringify({
@@ -37,7 +38,7 @@ export default function Login() {
 
             const response = await inspectorLogin(email, password);
 
-            localStorage.setItem("role", "INSPECTOR");
+            saveStaffSession("INSPECTOR", response?.token);
             localStorage.removeItem("admin");
             localStorage.setItem(
                 "inspectorId",

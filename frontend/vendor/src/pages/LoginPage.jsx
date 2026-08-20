@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { Alert } from '../components/Alert'
 import { USER_LANDING_URL } from '../utils/constants'
 import { getErrorMessage } from '../utils/errors'
+import { saveVendorToken } from '../api/session'
 
 export function LoginPage() {
   const { login } = useAuth()
@@ -33,6 +34,8 @@ export function LoginPage() {
     setLoading(true)
     try {
       const res = await vendorApi.login({ phoneNo: phoneNo.trim(), password })
+      // Store the token first: everything after this navigation needs it.
+      saveVendorToken(res.token)
       login(res.vendor, res.shops)
       navigate('/dashboard')
     } catch (err) {

@@ -1,3 +1,5 @@
+import { clearVendorToken, getVendorToken } from './session'
+
 const BASE =
   import.meta.env.VITE_API_BASE_URL
     ? `${import.meta.env.VITE_API_BASE_URL}/vendor`
@@ -51,8 +53,15 @@ export async function request(url, options) {
   let res
 
   try {
+    const token = getVendorToken()
+
     res = await fetch(`${BASE}${url}`, {
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      headers: {
+        'Content-Type': 'application/json',
+        // Without this every /vendor call comes back 401.
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options?.headers,
+      },
       ...options,
     })
   } catch {
@@ -63,6 +72,13 @@ export async function request(url, options) {
   }
 
   if (!res.ok) {
+    if (res.status === 401) {
+      // Expired or invalid token: clear it so the app falls back to the login
+      // screen instead of looping on failed requests.
+      clearVendorToken()
+      localStorage.removeItem('gutfriendly_vendor_auth')
+    }
+
     const err = await res.json().catch(() => ({}))
     throw parseErrorBody(err, res.status)
   }

@@ -15,6 +15,8 @@ import com.gutfriendly.app.vendor.dto.VendorProfileDTO;
 import com.gutfriendly.app.vendor.dto.VendorRegisterRequestDTO;
 import com.gutfriendly.app.vendor.dto.VendorRegisterResponseDTO;
 import com.gutfriendly.app.common.security.PasswordHasher;
+import com.gutfriendly.app.security.AuthRole;
+import com.gutfriendly.app.security.AuthTokenService;
 import com.gutfriendly.app.common.validation.RegistrationValidator;
 import com.gutfriendly.app.vendor.util.PhoneNumberUtil;
 
@@ -23,10 +25,13 @@ public class VendorService {
 
 	private final VendorDetailsRepository repo;
 	private final VendorShopService vendorShopService;
+	private final AuthTokenService authTokenService;
 
-	VendorService(VendorDetailsRepository repo, VendorShopService vendorShopService) {
+	VendorService(VendorDetailsRepository repo, VendorShopService vendorShopService,
+			AuthTokenService authTokenService) {
 		this.repo = repo;
 		this.vendorShopService = vendorShopService;
+		this.authTokenService = authTokenService;
 	}
 
 	public VendorRegisterResponseDTO register(VendorRegisterRequestDTO request) {
@@ -94,6 +99,7 @@ public class VendorService {
 
 		return new VendorLoginResponseDTO(
 				"Login successful",
+				authTokenService.issue(AuthRole.VENDOR, vendor.getVendorId()),
 				// Aadhaar and PAN are deliberately masked here. The settings
 				// screen fetches them separately when it actually needs them.
 				VendorProfileDTO.masked(vendor),
