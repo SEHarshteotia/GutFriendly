@@ -11,6 +11,16 @@ public interface VendorDetailsRepository extends JpaRepository<VendorDetails, In
 
 	VendorDetails findByPhoneNo(String phoneNo);
 
+	// Used to tell the caller exactly which field collided, instead of
+	// relying on the wording of a database constraint error.
+	boolean existsByPhoneNo(String phoneNo);
+
+	boolean existsByEmail(String email);
+
+	boolean existsByAdharNo(String adharNo);
+
+	boolean existsByPanNo(String panNo);
+
 	// findByPhoneNoAndPassword was removed: passwords are stored as salted
 	// digests now, so they cannot be matched with a WHERE clause. Look the
 	// vendor up by phone and verify with PasswordHasher instead.

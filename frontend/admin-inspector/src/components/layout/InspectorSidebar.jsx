@@ -8,7 +8,7 @@ import {
 import { NavLink } from "react-router-dom";
 import GutFriendlyLogo from "@shared/GutFriendlyLogo";
 
-export default function InspectorSidebar() {
+export default function InspectorSidebar({ isOpen = false, onClose }) {
 
     const menu = [
 
@@ -40,13 +40,27 @@ export default function InspectorSidebar() {
 
     return (
 
-        <aside className="portal-sidebar w-72 h-screen">
+        <aside
+            className={`portal-sidebar w-72 h-screen ${
+                isOpen ? "is-open" : ""
+            }`}
+        >
 
-            <div className="border-b p-7">
+            <div className="border-b p-7 flex items-center justify-between gap-3">
                 <GutFriendlyLogo
                     size="md"
                     subtitle="Inspector Portal"
                 />
+
+                {/* Only shown on a phone, where the sidebar is a drawer. */}
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Close menu"
+                    className="gf-drawer-close text-gray-400 hover:text-[#087454] text-xl leading-none px-2"
+                >
+                    &times;
+                </button>
             </div>
 
             <div className="mt-6">

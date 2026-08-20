@@ -44,6 +44,25 @@ public class VendorService {
 		vendor.setJoiningDate(LocalDateTime.now());
 		vendor.setActive(true);
 
+		// Check each unique field up front so the response can name the exact
+		// one that is taken. The catch below is only a race-condition backstop.
+		if (repo.existsByPhoneNo(vendor.getPhoneNo())) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"That phone number is already registered");
+		}
+		if (vendor.getEmail() != null && repo.existsByEmail(vendor.getEmail())) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"That email address is already registered");
+		}
+		if (vendor.getAdharNo() != null && repo.existsByAdharNo(vendor.getAdharNo())) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"That Aadhaar number is already registered");
+		}
+		if (vendor.getPanNo() != null && repo.existsByPanNo(vendor.getPanNo())) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT,
+					"That PAN number is already registered");
+		}
+
 		VendorDetails saved;
 		try {
 			saved = repo.save(vendor);

@@ -125,6 +125,10 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 
 	@Override
 	public InspectionTestResultResponse saveTestResult(int inspectionId, InspectionTestResultRequest request) {
+		// Step 0 : Check the sample quantity before anything else, so a bad value
+		// comes back as a clear message instead of a database error later on.
+		String sampleQuantity = normaliseSampleQuantity(request.getQuantitySampleTaken());
+
 		// Step 1 : Find Inspection
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
 
@@ -160,7 +164,7 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 
 		result.setSampleType(request.getSampleType());
 		result.setSampleDescription(request.getSampleDescription());
-		result.setQuantitySampleTaken(request.getQuantitySampleTaken());
+		result.setQuantitySampleTaken(sampleQuantity);
 		result.setOutcome(request.getOutcome());
 		result.setObservationNotes(request.getObservationNotes());
 		result.setScoreAwarded(request.getScoreAwarded());
@@ -238,5 +242,32 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 		return response;
 
 	}
+	/**
+	 * Sample quantity is stored as text, so it has to be checked here: it must
+	 * be a whole number from 1 to 100. Anything else (letters, decimals, zero,
+	 * negatives, or an empty box) is rejected rather than silently saved.
+	 */
+	private String normaliseSampleQuantity(String rawQuantity) {
 
+		String quantity = rawQuantity == null ? "" : rawQuantity.trim();
+
+		if (quantity.isEmpty()) {
+			throw new BadRequestException(
+					"Quantity of sample taken is required");
+		}
+
+		if (!quantity.matches("\\d{1,3}")) {
+			throw new BadRequestException(
+					"Quantity of sample taken must be a whole number between 1 and 100");
+		}
+
+		int value = Integer.parseInt(quantity);
+
+		if (value < 1 || value > 100) {
+			throw new BadRequestException(
+					"Quantity of sample taken must be between 1 and 100");
+		}
+
+		return String.valueOf(value);
+	}
 }

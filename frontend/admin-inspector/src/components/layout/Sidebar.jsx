@@ -11,7 +11,7 @@ import {
 import { NavLink } from "react-router-dom";
 import GutFriendlyLogo from "@shared/GutFriendlyLogo";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen = false, onClose }) {
 
     const menu = [
         {
@@ -53,14 +53,28 @@ export default function Sidebar() {
 
     return (
 
-        <aside className="portal-sidebar w-72 h-screen flex flex-col">
+        <aside
+            className={`portal-sidebar w-72 h-screen flex flex-col ${
+                isOpen ? "is-open" : ""
+            }`}
+        >
 
             {/* Brand */}
-            <div className="border-b border-gray-100 px-7 py-7">
+            <div className="border-b border-gray-100 px-7 py-7 flex items-center justify-between gap-3">
                 <GutFriendlyLogo
                     size="md"
                     subtitle="Admin Console"
                 />
+
+                {/* Only shown on a phone, where the sidebar is a drawer. */}
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Close menu"
+                    className="gf-drawer-close text-gray-400 hover:text-[#173F33] text-xl leading-none px-2"
+                >
+                    &times;
+                </button>
             </div>
 
             {/* Nav */}

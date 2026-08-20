@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.gutfriendly.app.user.dto.ProfileResponseDTO;
@@ -80,7 +81,28 @@ public class UserService {
                 PasswordHasher.hash(user.getPassword())
         );
 
-        repo.save(user);
+        // phone_no and email are both UNIQUE. Registering an existing one used
+        // to surface as a 500; report it as a 409 the form can act on.
+        if (repo.findByPhoneNo(user.getPhoneNo()) != null) {
+            throw new ConflictException(
+                    "An account with this phone number already exists"
+            );
+        }
+
+        if (repo.findByEmail(user.getEmail()) != null) {
+            throw new ConflictException(
+                    "An account with this email address already exists"
+            );
+        }
+
+        try {
+            repo.save(user);
+        } catch (DataIntegrityViolationException ex) {
+            // Backstop for the race between the checks above and the insert.
+            throw new ConflictException(
+                    "An account with these details already exists"
+            );
+        }
     }
 
     // Validates login using phone number and password.

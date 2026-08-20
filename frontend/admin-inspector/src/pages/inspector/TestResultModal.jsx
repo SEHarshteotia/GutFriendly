@@ -33,10 +33,18 @@ export default function TestResultModal({
 
     function handleChange(e) {
 
+        let value = e.target.value;
+
+        // Sample quantity is a count, so drop anything that is not a digit
+        // as it is typed. This also stops "-", "e" and pasted text.
+        if (e.target.name === "quantitySampleTaken") {
+            value = value.replace(/\D/g, "").slice(0, 3);
+        }
+
         setForm({
 
             ...form,
-            [e.target.name]: e.target.value
+            [e.target.name]: value
 
         });
 
@@ -59,6 +67,23 @@ export default function TestResultModal({
             return;
         }
 
+        const quantity = String(form.quantitySampleTaken).trim();
+
+        if (quantity === "") {
+            alert("Please enter the quantity of sample taken");
+            return;
+        }
+
+        if (!/^\d+$/.test(quantity)) {
+            alert("Quantity of sample taken must be a whole number between 1 and 100");
+            return;
+        }
+
+        if (Number(quantity) < 1 || Number(quantity) > 100) {
+            alert("Quantity of sample taken must be between 1 and 100");
+            return;
+        }
+
         onSave({
 
             testId: test.testId,
@@ -73,9 +98,9 @@ export default function TestResultModal({
 
     return (
 
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-4">
 
-            <div className="bg-white rounded-xl w-[700px] p-6 shadow-xl">
+            <div className="bg-white rounded-xl w-full max-w-[700px] max-h-[90vh] overflow-y-auto p-4 sm:p-6 shadow-xl">
 
                 <h2 className="text-2xl font-bold mb-6">
 
@@ -155,12 +180,21 @@ export default function TestResultModal({
 
                     <input
                         type="text"
+                        inputMode="numeric"
                         name="quantitySampleTaken"
                         value={form.quantitySampleTaken}
-                        placeholder="Quantity Sample Taken"
+                        placeholder="Quantity Sample Taken (1 - 100)"
                         onChange={handleChange}
                         className="border p-2 rounded w-full"
                     />
+
+                    {form.quantitySampleTaken !== "" &&
+                        (Number(form.quantitySampleTaken) < 1 ||
+                            Number(form.quantitySampleTaken) > 100) && (
+                            <p className="text-sm text-red-600 -mt-2">
+                                Quantity must be between 1 and 100
+                            </p>
+                        )}
 
                     <select
                         name="outcome"

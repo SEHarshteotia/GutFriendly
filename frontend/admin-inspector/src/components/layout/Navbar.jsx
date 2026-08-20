@@ -1,7 +1,7 @@
-import { FaBell, FaSearch, FaQuestionCircle } from "react-icons/fa";
+import { FaBell, FaSearch, FaQuestionCircle, FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }) {
 
     const navigate = useNavigate();
 
@@ -17,7 +17,19 @@ export default function Navbar() {
 
         <header className="portal-topbar bg-white h-20 px-8 flex justify-between items-center">
 
-            <div className="relative">
+            <div className="flex items-center gap-3 min-w-0">
+
+                {/* Opens the slide-in menu; only visible on small screens. */}
+                <button
+                    type="button"
+                    onClick={onMenuClick}
+                    aria-label="Open menu"
+                    className="gf-hamburger"
+                >
+                    <FaBars size={18} />
+                </button>
+
+            <div className="relative gf-topbar-search">
                 <FaSearch
                     size={14}
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -27,6 +39,8 @@ export default function Navbar() {
                     placeholder="Search businesses..."
                     className="border border-gray-200 bg-gray-50 rounded-full pl-10 pr-4 py-2.5 w-96 text-sm focus:outline-none focus:ring-2 focus:ring-[#173F33]/20 focus:border-[#173F33] focus:bg-white"
                 />
+            </div>
+
             </div>
 
             <div className="flex items-center gap-5">

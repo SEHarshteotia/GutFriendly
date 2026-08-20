@@ -102,7 +102,7 @@ export default function Login() {
 
             <div className="staff-auth-form w-full lg:w-1/2 flex items-center justify-center">
 
-                <div className="staff-auth-card bg-white w-[440px] p-10">
+                <div className="staff-auth-card bg-white w-full max-w-[440px] p-6 sm:p-10">
 
                     <div className="text-center mb-8">
 

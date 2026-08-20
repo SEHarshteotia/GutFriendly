@@ -1,7 +1,7 @@
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-export default function InspectorNavbar() {
+export default function InspectorNavbar({ onMenuClick }) {
 
     const navigate = useNavigate();
 
@@ -15,15 +15,25 @@ export default function InspectorNavbar() {
 
         <header className="portal-topbar bg-white h-20 px-8 flex justify-between items-center">
 
-            <input
+            <div className="flex items-center gap-3 min-w-0">
 
-                type="text"
+                {/* Opens the slide-in menu; only visible on small screens. */}
+                <button
+                    type="button"
+                    onClick={onMenuClick}
+                    aria-label="Open menu"
+                    className="gf-hamburger"
+                >
+                    <FaBars size={18} />
+                </button>
 
-                placeholder="Search Inspections..."
+                <input
+                    type="text"
+                    placeholder="Search Inspections..."
+                    className="border rounded-lg px-4 py-2 w-96 gf-topbar-search"
+                />
 
-                className="border rounded-lg px-4 py-2 w-96"
-
-            />
+            </div>
 
             <div className="flex items-center gap-6">
 
