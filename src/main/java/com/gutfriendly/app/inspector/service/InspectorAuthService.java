@@ -3,6 +3,7 @@ package com.gutfriendly.app.inspector.service;
 import org.springframework.stereotype.Service;
 
 import com.gutfriendly.app.admin.enums.InspectorStatus;
+import com.gutfriendly.app.common.security.PasswordHasher;
 import com.gutfriendly.app.admin.repository.InspectorDetailsRepo;
 import com.gutfriendly.app.inspector.dto.InspectorLoginDTO;
 import com.gutfriendly.app.inspector.model.InspectorDetails;
@@ -36,8 +37,13 @@ public class InspectorAuthService {
 				.findByEmail(loginDTO.getEmail().trim())
 				.orElseThrow(() -> new ResourceNotFoundException("Inspector not found"));
 
-		if (!inspector.getPassword().equals(loginDTO.getPassword())) {
+		if (!PasswordHasher.matches(loginDTO.getPassword(), inspector.getPassword())) {
 			throw new BadRequestException("Invalid email or password");
+		}
+
+		if (PasswordHasher.needsRehash(inspector.getPassword())) {
+			inspector.setPassword(PasswordHasher.hash(loginDTO.getPassword()));
+			inspectorRepo.save(inspector);
 		}
 
 		if (inspector.getStatus() != InspectorStatus.ACTIVE) {

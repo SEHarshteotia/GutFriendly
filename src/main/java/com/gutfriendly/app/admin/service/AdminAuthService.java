@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.gutfriendly.app.admin.dto.request.AdminLoginRequest;
 import com.gutfriendly.app.admin.model.AdminDetails;
 import com.gutfriendly.app.admin.repository.AdminDetailsRepository;
+import com.gutfriendly.app.common.security.PasswordHasher;
 import com.gutfriendly.app.user.exception.BadRequestException;
 import com.gutfriendly.app.user.exception.ConflictException;
 
@@ -42,9 +43,13 @@ public class AdminAuthService {
 				.findByEmail(request.getEmail().trim())
 				.orElseThrow(() -> new BadRequestException("Invalid email or password"));
 
-		if (admin.getPassword() == null
-				|| !admin.getPassword().equals(request.getPassword())) {
+		if (!PasswordHasher.matches(request.getPassword(), admin.getPassword())) {
 			throw new BadRequestException("Invalid email or password");
+		}
+
+		if (PasswordHasher.needsRehash(admin.getPassword())) {
+			admin.setPassword(PasswordHasher.hash(request.getPassword()));
+			adminDetailsRepository.save(admin);
 		}
 
 		if (!admin.isActiveStatus()) {

@@ -1,5 +1,6 @@
 package com.gutfriendly.app.user.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.gutfriendly.app.user.dto.UserLoginDTO;
 import com.gutfriendly.app.user.exception.BadRequestException;
 import com.gutfriendly.app.user.exception.ConflictException;
 import com.gutfriendly.app.user.exception.ResourceNotFoundException;
+import com.gutfriendly.app.common.security.PasswordHasher;
 import com.gutfriendly.app.common.validation.RegistrationValidator;
 import com.gutfriendly.app.admin.model.Pincode;
 import com.gutfriendly.app.admin.repository.PincodeRepository;
@@ -58,6 +60,26 @@ public class UserService {
             throw new BadRequestException(ex.getMessage());
         }
 
+        // Registration must never let the caller pick these. They used to be
+        // taken straight off the request body, so a hand-written POST could
+        // hand itself a trusted badge and a reward balance.
+        user.setUser_id(0);
+        user.setTrustedUser(false);
+        user.setRewardPoints(0);
+        user.setIs_active(true);
+
+        // joining_date is NOT NULL and was only ever set by the signup form,
+        // so any other client hit a 500 here.
+        if (user.getJoining_date() == null) {
+            user.setJoining_date(
+                    new Timestamp(System.currentTimeMillis())
+            );
+        }
+
+        user.setPassword(
+                PasswordHasher.hash(user.getPassword())
+        );
+
         repo.save(user);
     }
 
@@ -98,12 +120,21 @@ public class UserService {
             );
         }
 
-        if (!user.getPassword()
-                .equals(loginDTO.getPassword())) {
+        if (!PasswordHasher.matches(
+                loginDTO.getPassword(),
+                user.getPassword())) {
 
             throw new BadRequestException(
                     "Invalid phone number or password"
             );
+        }
+
+        // Retire the cleartext row now that we know the real password.
+        if (PasswordHasher.needsRehash(user.getPassword())) {
+            user.setPassword(
+                    PasswordHasher.hash(loginDTO.getPassword())
+            );
+            repo.save(user);
         }
 
         if (!user.isIs_active()) {

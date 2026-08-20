@@ -11,6 +11,8 @@ public interface VendorDetailsRepository extends JpaRepository<VendorDetails, In
 
 	VendorDetails findByPhoneNo(String phoneNo);
 
-	VendorDetails findByPhoneNoAndPassword(String phoneNo, String password);
+	// findByPhoneNoAndPassword was removed: passwords are stored as salted
+	// digests now, so they cannot be matched with a WHERE clause. Look the
+	// vendor up by phone and verify with PasswordHasher instead.
 
 }

@@ -3,6 +3,7 @@ package com.gutfriendly.app.admin.service;
 import org.springframework.stereotype.Service;
 
 import com.gutfriendly.app.admin.dto.request.AdminRegisterRequest;
+import com.gutfriendly.app.common.security.PasswordHasher;
 import com.gutfriendly.app.admin.model.AdminDetails;
 import com.gutfriendly.app.admin.repository.AdminDetailsRepository;
 import com.gutfriendly.app.user.exception.BadRequestException;
@@ -56,7 +57,7 @@ public class AdminServiceImpl implements AdminService {
 		admin.setLastName(request.getLastName());
 		admin.setEmail(request.getEmail());
 		admin.setPhoneNo(request.getPhoneNo());
-		admin.setPassword(request.getPassword());
+		admin.setPassword(PasswordHasher.hash(request.getPassword()));
 
 		return ad.save(admin);
 

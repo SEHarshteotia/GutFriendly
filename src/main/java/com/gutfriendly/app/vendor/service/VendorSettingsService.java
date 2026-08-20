@@ -7,10 +7,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.gutfriendly.app.admin.model.VendorDetails;
 import com.gutfriendly.app.admin.repository.VendorDetailsRepository;
+import com.gutfriendly.app.common.security.PasswordHasher;
 import com.gutfriendly.app.vendor.dto.ChangePasswordRequestDTO;
 import com.gutfriendly.app.vendor.dto.ChangePhoneRequestDTO;
 import com.gutfriendly.app.vendor.dto.UpdateVendorProfileRequestDTO;
 import com.gutfriendly.app.vendor.dto.VendorProfileDTO;
+import com.gutfriendly.app.common.validation.RegistrationValidator;
 import com.gutfriendly.app.vendor.util.PhoneNumberUtil;
 
 @Service
@@ -60,16 +62,20 @@ public class VendorSettingsService {
 		if (request.getCurrentPassword() == null || request.getNewPassword() == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Current and new password are required");
 		}
-		if (request.getNewPassword().length() < 6) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password must be at least 6 characters");
+		// Was a bare 6-character check, which let a password through here that
+		// the signup form would have rejected.
+		try {
+			RegistrationValidator.validatePassword(request.getNewPassword());
+		} catch (RegistrationValidator.ValidationException ex) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 
 		VendorDetails vendor = contextService.findVendor(vendorId);
-		if (!vendor.getPassword().equals(request.getCurrentPassword())) {
+		if (!PasswordHasher.matches(request.getCurrentPassword(), vendor.getPassword())) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current password is incorrect");
 		}
 
-		vendor.setPassword(request.getNewPassword());
+		vendor.setPassword(PasswordHasher.hash(request.getNewPassword()));
 		vendorRepository.save(vendor);
 	}
 
@@ -83,7 +89,7 @@ public class VendorSettingsService {
 		}
 
 		VendorDetails vendor = contextService.findVendor(vendorId);
-		if (!vendor.getPassword().equals(request.getPassword())) {
+		if (!PasswordHasher.matches(request.getPassword(), vendor.getPassword())) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password is incorrect");
 		}
 
