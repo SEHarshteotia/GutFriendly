@@ -62,8 +62,20 @@ export default function TestResultModal({
             return;
         }
 
-        if (form.scoreAwarded === "") {
+        const score = String(form.scoreAwarded).trim();
+
+        if (score === "") {
             alert("Please enter score");
+            return;
+        }
+
+        if (!/^\d+(\.\d+)?$/.test(score)) {
+            alert("Score awarded must be a number between 0 and 10");
+            return;
+        }
+
+        if (Number(score) < 0 || Number(score) > 10) {
+            alert("Score awarded must be between 0 and 10");
             return;
         }
 
@@ -235,6 +247,15 @@ export default function TestResultModal({
                         onChange={handleChange}
                         className="border p-2 rounded w-full"
                     />
+
+                    {form.scoreAwarded !== "" &&
+                        (Number(form.scoreAwarded) < 0 ||
+                            Number(form.scoreAwarded) > 10 ||
+                            Number.isNaN(Number(form.scoreAwarded))) && (
+                            <p className="text-sm text-red-600 -mt-2">
+                                Score must be between 0 and 10
+                            </p>
+                        )}
 
                     <select
                         name="actionTaken"

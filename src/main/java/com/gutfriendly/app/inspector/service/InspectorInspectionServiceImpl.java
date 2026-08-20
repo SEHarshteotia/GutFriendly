@@ -125,9 +125,11 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 
 	@Override
 	public InspectionTestResultResponse saveTestResult(int inspectionId, InspectionTestResultRequest request) {
-		// Step 0 : Check the sample quantity before anything else, so a bad value
-		// comes back as a clear message instead of a database error later on.
+		// Step 0 : Check the sample quantity and score before anything else, so a
+		// bad value comes back as a clear message instead of a database error
+		// later on.
 		String sampleQuantity = normaliseSampleQuantity(request.getQuantitySampleTaken());
+		double scoreAwarded = normaliseScoreAwarded(request.getScoreAwarded());
 
 		// Step 1 : Find Inspection
 		Optional<InspectionDetails> optionalInspection = inspectionRepo.findById(inspectionId);
@@ -167,7 +169,7 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 		result.setQuantitySampleTaken(sampleQuantity);
 		result.setOutcome(request.getOutcome());
 		result.setObservationNotes(request.getObservationNotes());
-		result.setScoreAwarded(request.getScoreAwarded());
+		result.setScoreAwarded(scoreAwarded);
 		result.setActionTaken(request.getActionTaken());
 		result.setLabReferenceNo(request.getLabReferenceNo());
 
@@ -269,5 +271,29 @@ public class InspectorInspectionServiceImpl implements InspectorInspectionServic
 		}
 
 		return String.valueOf(value);
+	}
+
+	/**
+	 * The score decides the shop's overall inspection score, so it has to stay
+	 * on the 0 to 10 scale the form promises. A missing box, a negative number,
+	 * or anything above 10 is rejected instead of quietly skewing the average.
+	 */
+	private double normaliseScoreAwarded(Double rawScore) {
+
+		if (rawScore == null) {
+			throw new BadRequestException("Score awarded is required");
+		}
+
+		double score = rawScore;
+
+		if (Double.isNaN(score) || Double.isInfinite(score)) {
+			throw new BadRequestException("Score awarded must be a number between 0 and 10");
+		}
+
+		if (score < 0 || score > 10) {
+			throw new BadRequestException("Score awarded must be between 0 and 10");
+		}
+
+		return score;
 	}
 }
